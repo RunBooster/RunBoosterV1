@@ -319,9 +319,10 @@ def envoyer_email(destinataire, fichier_pdf):
     except Exception as e:
         st.error(f"❌ Erreur lors de l'envoi de l'email : {e}")
 
+nom = st.text_input("Prénom (facultatif)")
+email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif (facultatif)")
 
 if st.button("Créer mon Plan Nutritionnel"):
-    st.write("Allons-y")
 # Affichage du plan nutritionnel
     if plan:
          st.write("### Plan nutritionnel généré :")
@@ -329,32 +330,32 @@ if st.button("Créer mon Plan Nutritionnel"):
               st.write(ligne)
          for ligne in plan:
               st.write(ligne)
-         st.write("Hydrate toi dès les premières minutes de course." \
-    "En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide. Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.")
-         st.write("Attention: " \
-    "Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre. " \
-    "Boire plus de 800mL d'eau par heure peut être dangereux. " \
-    "Si plus de 70g de glucides consommés par heure, entrainer son intestin avant à l’entrainement avant pour l'habituer et de pas avoir de problème gastrique le jour J. " \
-    "Tester les différents produits avant le jour J."
-    "Ne dépasse pas 400mg de caféine dans la journée."
-    "La consultation d'un professionnel de santé est conseillée en cas de doute.")
-         
-     nom = st.text_input("Prénom")
-     email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif")
-     if st.button("Recevoir mon Plan par Email"):
-         if email:
-             if plan:  # Vérification que le plan n'est pas vide
-                 contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
+         st.write("Hydrate toi dès les premières minutes de course.")
+         st.write("En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.")
+         st.write("Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.")
+         st.write("Attention: ")
+         st.write("Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre. ")
+         st.write("Boire plus de 800mL d'eau par heure peut être dangereux. ")
+         st.write("Si plus de 70g de glucides consommés par heure, entrainer son intestin avant à l’entrainement (Gut training). ")
+         st.write("Tester les différents produits avant le jour J. ")
+         st.write("Ne dépasse pas 400mg de caféine dans la journée. ")
+         st.write("La consultation d'un professionnel de santé est conseillée en cas de doute. ")
+
+st.divider()
+if st.button("Recevoir mon Plan par Email"):
+     if email:
+          if plan:  # Vérification que le plan n'est pas vide
+               contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
 
                  # Générer le PDF
-                 fichier_pdf = generer_pdf(contenu_plan)
+               fichier_pdf = generer_pdf(contenu_plan)
 
                  # Envoyer l'email
-                 envoyer_email(email, fichier_pdf)
+               envoyer_email(email, fichier_pdf)
 
                  # Supprimer le fichier après envoi
-                 os.remove(fichier_pdf)
-             else:
-                 st.warning("❌ Aucun plan nutritionnel généré.")
-         else:
-             st.warning("❌ Veuillez entrer une adresse email valide.")
+               os.remove(fichier_pdf)
+          else:
+               st.warning("❌ Aucun plan nutritionnel généré.")
+     else:
+          st.warning("❌ Veuillez entrer une adresse email valide.")
