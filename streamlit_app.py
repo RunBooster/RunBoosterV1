@@ -289,6 +289,28 @@ def generer_pdf(contenu):
                 pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
             except Exception as e:
                 print(f"Erreur d'encodage : {e}, ligne ignorée: {ligne}")
+         # Séparation
+    pdf.ln(10)
+    pdf.set_font("Arial", style="B", size=12)
+    pdf.cell(200, 10, "Conseils nutrition & sécurité", ln=True)
+    pdf.set_font("Arial", size=11)
+
+    # Conseils ajoutés
+    conseils = [
+        "Hydrate toi dès les premières minutes de course.",
+        "En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
+        "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
+        "Attention :",
+        "Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre.",
+        "Boire plus de 800mL d'eau par heure peut être dangereux.",
+        "Si plus de 70g de glucides sont consommés par heure, entraîne ton intestin à l'entraînement (Gut training).",
+        "Teste les différents produits avant le jour J.",
+        "Ne dépasse pas 400mg de caféine dans la journée.",
+        "La consultation d'un professionnel de santé est conseillée en cas de doute."
+    ]
+
+    for conseil in conseils:
+        pdf.multi_cell(0, 8, conseil.encode("latin-1", "ignore").decode("latin-1"))
 
     # Sauvegarde du PDF
     pdf_filename = "plan_nutritionnel.pdf"
@@ -301,10 +323,10 @@ def envoyer_email(destinataire, fichier_pdf):
     mot_de_passe = "zxkt evcb usww bgyt"  # Utiliser une variable d'environnement !
 
     msg = EmailMessage()
-    msg["Subject"] = "Votre Plan Nutritionnel 📄"
+    msg["Subject"] = "Ton Plan Nutritionnel de course 📄"
     msg["From"] = expediteur
     msg["To"] = destinataire
-    msg.set_content(f"Bonjour {nom},\n\nVeuillez trouver ci-joint votre plan nutritionnel en PDF.\n\nBonne journée !")
+    msg.set_content(f"Bonjour {nom},\n\nTu trouveras ci-joint ton plan nutritionnel en PDF pour ta course de {distance} kilomètres.\n\nBonne course!")
 
     # Ajouter le PDF en pièce jointe
     with open(fichier_pdf, "rb") as f:
@@ -341,7 +363,8 @@ if st.button("Créer mon Plan Nutritionnel"):
          st.write("Ne dépasse pas 400mg de caféine dans la journée. ")
          st.write("La consultation d'un professionnel de santé est conseillée en cas de doute. ")
 
-st.divider()
+
+
 if st.button("Recevoir mon Plan par Email"):
      if email:
           if plan:  # Vérification que le plan n'est pas vide
