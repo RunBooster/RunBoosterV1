@@ -3,7 +3,6 @@ import pandas as pd
 import random
 import smtplib
 import numpy as np
-from fpdf import FPDF
 import os
 from email.message import EmailMessage
 
@@ -287,86 +286,3 @@ if st.button("Créer mon Plan Nutritionnel"):
     "Tester les différents produits avant le jour J."
     "Ne dépasse pas 400mg de caféine dans la journée."
     "La consultation d'un professionnel de santé est conseillée en cas de doute.")
-
-
-
-
-
-
-
-
-
-
-
-st.divider()
-nom = st.text_input("Prénom")
-email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif")
-def generer_pdf(contenu):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    # Titre du PDF
-    pdf.cell(200, 10, "Résumé de votre Plan Nutritionnel", ln=True, align='C')
-    pdf.ln(10)
-
-    # Ajout du contenu en forçant l'encodage UTF-8
-    for ligne in proposition:
-        pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
-    for ligne in plan:
-        if ligne:
-            try:
-                pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
-            except Exception as e:
-                print(f"Erreur d'encodage : {e}, ligne ignorée: {ligne}")
-
-    # Sauvegarde du PDF
-    pdf_filename = "plan_nutritionnel.pdf"
-    pdf.output(pdf_filename)
-    return pdf_filename
-
-# === Fonction d'envoi d'email ===
-def envoyer_email(destinataire, fichier_pdf):
-    expediteur = "plan.runbooster@gmail.com"
-    mot_de_passe = "zxkt evcb usww bgyt"  # Utiliser une variable d'environnement !
-
-    msg = EmailMessage()
-    msg["Subject"] = "Votre Plan Nutritionnel 📄"
-    msg["From"] = expediteur
-    msg["To"] = destinataire
-    msg.set_content(f"Bonjour {nom},\n\nVeuillez trouver ci-joint votre plan nutritionnel en PDF.\n\nBonne journée !")
-
-    # Ajouter le PDF en pièce jointe
-    with open(fichier_pdf, "rb") as f:
-        msg.add_attachment(f.read(), maintype="application", subtype="pdf", filename=fichier_pdf)
-
-    # Envoi via SMTP
-    try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
-            serveur.login(expediteur, mot_de_passe)
-            serveur.send_message(msg)
-        st.success(f"📧 Email envoyé avec succès à {destinataire} !")
-    except Exception as e:
-        st.error(f"❌ Erreur lors de l'envoi de l'email : {e}")
-
-# === Bouton pour envoyer le PDF par email ===
-if st.button("Recevoir mon Plan par Email"):
-    if email:
-        if plan:  # Vérification que le plan n'est pas vide
-            contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
-
-            # Générer le PDF
-            fichier_pdf = generer_pdf(contenu_plan)
-
-            # Envoyer l'email
-            envoyer_email(email, fichier_pdf)
-
-            # Supprimer le fichier après envoi
-            os.remove(fichier_pdf)
-        else:
-            st.warning("❌ Aucun plan nutritionnel généré.")
-    else:
-        st.warning("❌ Veuillez entrer une adresse email valide.")
-#Un e-mail lui est envoyé via SMTP (Gmail dans cet exemple), 
-#Vous devez activer "Accès aux applications moins sécurisées" sur votre compte Gmail pour envoyer des e-mails via SMTP, 
-#Pour éviter d'exposer vos identifiants, utilisez des variables d'environnement ou un service tiers comme SendGrid.
