@@ -136,7 +136,7 @@ if "Aucune" not in selection:
     df = df[df["Marque"].isin(selection) | (df["Marque"] == "Non communiquée")]
 #Filtrage caféine
 if cafeine==0:
-     df = df[df["Caf "] == 0]
+     df = df[df["Caf"] == 0]
 # Appliquer les filtres booléens (Bio, Noix, Lactose, Gluten, DOP)
 for critere in ["bio", "dop"]:
     if locals()[f"filtrer_{critere}"]:  # Vérifier si la checkbox est cochée
