@@ -9,9 +9,10 @@ jobs:
   keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main branch
         uses: actions/checkout@v3
         with:
+          ref: main             
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Make empty commit and push
@@ -19,4 +20,4 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git commit --allow-empty -m "Keep alive"
-          git push origin HEAD
+          git push origin main  
