@@ -112,7 +112,8 @@ filtrer_noix = st.checkbox("Sans fruits à coque")
 filtrer_lactose = st.checkbox("Sans lactose")
 filtrer_gluten = st.checkbox("Sans gluten")
 filtrer_dop = st.checkbox("Certification anti-dopage")
-filtrer_prix = st.checkbox("Le moins cher")
+filtrer_prix = st.checkbox("Le moins cher (1 élément par typologie de produit)")
+filtrer_prix2 = st.checkbox("Les moins chers  (2 éléments par typologie de produit)")
 filtrer_densite = st.checkbox("Densité énergétique maximale")
 criteres_selectionnes = []
 if filtrer_bio:
@@ -127,6 +128,8 @@ if filtrer_dop:
     criteres_selectionnes.append("Certification anti-dopage")
 if filtrer_prix:
     criteres_selectionnes.append("Le moins cher")
+if filtrer_prix2:
+    criteres_selectionnes.append("Les moins chers")
 if filtrer_densite:
     criteres_selectionnes.append("Densité énergétique maximale")
 proposition.append(f"Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
@@ -147,16 +150,21 @@ for critere in ["noix", "lactose", "gluten"]:
 
 # Filtrer par Prix (2 moins chers par Ref)
 if filtrer_prix:
+    df = df.sort_values(["Ref", "prix"]).groupby("Ref").head(1)
+if filtrer_prix2:
     df = df.sort_values(["Ref", "prix"]).groupby("Ref").head(2)
 
 # Filtrer par Densité (2 plus denses par Ref)
 if filtrer_densite:
-    df = df.sort_values(["Ref", "densite"], ascending=False).groupby("Ref").head(2)
+    df = df.sort_values(["Ref", "densite"], ascending=False).groupby("Ref").head(1)
 
 # Affichage des résultats
 st.write("### Produits trouvés :")
-st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide"]])
-
+st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(columns={
+        "prix": "Prix d'1g de glucide",
+        "Glucide": "Glucides (g)",
+        "densite": "Densité (glucide dans 1g de produit)",
+    }))
 
 st.subheader("Proposition d'un plan nutritionnel:", divider="red")
 plan = []
