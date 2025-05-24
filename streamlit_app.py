@@ -371,7 +371,7 @@ def envoyer_email(destinataire, fichier_pdf):
         st.error(f"❌ Erreur lors de l'envoi de l'email : {e}")
 
 
-if "Aucune" in selection:
+if "Aucune" in selection and not (filtrer_densite | filtrer_prix | filtrer_prix2):
      RecoMarque = [
           "Nous te conseillons de choisir une ou deux marques de nutrition pour ne pas que ton plan devienne un capharnaüm.",
           "Nos recommandations:",
