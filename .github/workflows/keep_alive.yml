@@ -1,4 +1,4 @@
-name: Keep Alive Streamlit
+name: Keep Alive Planif Runbooster
 
 on:
   schedule:
@@ -9,12 +9,12 @@ jobs:
   keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch
+      - name: Checkout with PAT
         uses: actions/checkout@v3
         with:
           ref: main
-          fetch-depth: 0  # 🔥 récupère tout l'historique Git
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Update timestamp in .keepalive file
         run: |
