@@ -370,6 +370,20 @@ def envoyer_email(destinataire, fichier_pdf):
     except Exception as e:
         st.error(f"❌ Erreur lors de l'envoi de l'email : {e}")
 
+
+if "Aucune" in selection:
+     RecoMarque = [
+          "Nous te conseillons de choisir une ou deux marques de nutrition pour ne pas que ton plan devienne un capharnaüm",
+          "Nos recommandations:",
+          "+Baouw pour des produits bio et naturel, respectueux du corps et très gourmands.",
+          "+Decathlon pour la simplicité d'accès à ses rayons et ses prix très abordables",
+          "+Nduranz et 4Endurance pour leurs prix imbattables",
+          "+Naak pour ses engagements", 
+          "+Ergysport, Authentic Nutrition, CooknRun, Atlet Nutrition, Meltonic, Gourmiz pour leur valeur et leur origine."]
+     st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in RecoMarque]))
+          
+
+
 nom = st.text_input("Prénom (facultatif)")
 email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif (facultatif)")
 
