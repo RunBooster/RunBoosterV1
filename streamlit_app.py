@@ -147,11 +147,11 @@ for critere in ["noix", "lactose", "gluten"]:
 
 # Filtrer par Prix (2 moins chers par Ref)
 if filtrer_prix:
-    df = df.sort_values(["Ref", "prix"]).groupby("Ref").head(3)
+    df = df.sort_values(["Ref", "prix"]).groupby("Ref").head(2)
 
 # Filtrer par Densité (2 plus denses par Ref)
 if filtrer_densite:
-    df = df.sort_values(["Ref", "densite"], ascending=False).groupby("Ref").head(3)
+    df = df.sort_values(["Ref", "densite"], ascending=False).groupby("Ref").head(2)
 
 # Affichage des résultats
 st.write("### Produits trouvés :")
