@@ -86,11 +86,6 @@ if temp and tpsestimeh>=2:
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
         proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
-if tpsestimeh>=3:
-        # st.write("➜Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), ils n'ont pas d'intérêt et alourdirons ton estomac")
-        proposition.append("Pour la boisson, regrouper la quantité de deux heures dans une seule gourde, la 2e gourde étant consacrée à l'eau pour se rincer la bouche.")
-        proposition.append("➜Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), ils n'ont pas d'intérêt et alourdirons ton estomac.")
-
 
 def load_data():
     df = pd.read_excel("produits.xlsx")  # Remplace par ton fichier
@@ -133,7 +128,7 @@ if filtrer_prix2:
     criteres_selectionnes.append("Les moins chers")
 if filtrer_densite:
     criteres_selectionnes.append("Densité énergétique maximale")
-proposition.append(f"Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
+proposition.append(f"--> Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
 
 # Filtrage par marque
 if "Aucune" not in selection:
@@ -289,19 +284,49 @@ elif cas in [3, 4, 5, 6, 7]:
         plan.append(f"🕐 Heure {int(tpsestimeh)} (dernière heure) : {x_1}g de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
 
+     
+
+    # Conseils ajoutés
+conseils = [
+        "+Pour la boisson, tu peux regrouper la quantité de deux heures dans une seule gourde, la 2e gourde étant",
+        "consacrée à l'eau pour se rincer la bouche.",
+        "+Tu peux commencer par augmenter ta quantité de glucides ingérée les 3 jours avant la course, pour faire",
+        "tes stocks de glycogène musculaire (énergie), en mangeant un peu plus de féculents (riz, pâtes, patates, pain,…),",
+        "et en réduisant les fibres (légumes crus, céréales complètes, légumineuses,…) ainsi que les graisses.",
+        "Ton dernier repas avant la course doit être pris au moins 3h avant le départ, et être assez léger,",
+        "ce n’est plus le moment de se surcharger le ventre.",
+        "   ",
+        "+Hydrate toi dès les premières minutes de course.",
+        "+Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), ils n'ont pas d'intérêt et",
+        "alourdirons ton estomac.",
+        "+En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
+        "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
+        "   ",
+        "ATTENTION :",
+        "++Ne dépasse pas 400mg de caféine dans la journée.",
+        "++Boire plus de 800mL d'eau par heure peut être dangereux.",
+        "++Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre.",
+        "+Si plus de 70g de glucides sont consommés par heure, entraîne ton intestin à l'entraînement (Gut training).",
+        "+Teste les différents produits avant le jour J.",
+        "+La consultation d'un professionnel de santé est conseillée en cas de doute."
+]
+
+
 
 def generer_pdf(contenu):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.set_font("Arial", style="B", size=14)
 
     # Titre du PDF
     pdf.cell(200, 10, "Résumé de votre Plan Nutritionnel", ln=True, align='C')
     pdf.ln(10)
 
     # Ajout du contenu en forçant l'encodage UTF-8
+    pdf.set_font("Arial", size=11)
     for ligne in proposition:
         pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
+    pdf.set_font("Arial", size=14)
     for ligne in plan:
         if ligne:
             try:
@@ -313,21 +338,6 @@ def generer_pdf(contenu):
     pdf.set_font("Arial", style="B", size=12)
     pdf.cell(200, 10, "Conseils nutrition & sécurité", ln=True)
     pdf.set_font("Arial", size=11)
-
-    # Conseils ajoutés
-    conseils = [
-        "Hydrate toi dès les premières minutes de course.",
-        "En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
-        "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
-        "Attention :",
-        "Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre.",
-        "Boire plus de 800mL d'eau par heure peut être dangereux.",
-        "Si plus de 70g de glucides sont consommés par heure, entraîne ton intestin à l'entraînement (Gut training).",
-        "Teste les différents produits avant le jour J.",
-        "Ne dépasse pas 400mg de caféine dans la journée.",
-        "La consultation d'un professionnel de santé est conseillée en cas de doute."
-    ]
-
     for conseil in conseils:
         pdf.multi_cell(0, 8, conseil.encode("latin-1", "ignore").decode("latin-1"))
 
@@ -371,16 +381,7 @@ if st.button("Créer mon Plan Nutritionnel"):
               st.write(ligne)
          for ligne in plan:
               st.write(ligne)
-         st.write("Hydrate toi dès les premières minutes de course.")
-         st.write("En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.")
-         st.write("Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.")
-         st.write("Attention: ")
-         st.write("Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre. ")
-         st.write("Boire plus de 800mL d'eau par heure peut être dangereux. ")
-         st.write("Si plus de 70g de glucides consommés par heure, entrainer son intestin avant à l’entrainement (Gut training). ")
-         st.write("Tester les différents produits avant le jour J. ")
-         st.write("Ne dépasse pas 400mg de caféine dans la journée. ")
-         st.write("La consultation d'un professionnel de santé est conseillée en cas de doute. ")
+         st.write("\n".join(conseils))
 
 
 
