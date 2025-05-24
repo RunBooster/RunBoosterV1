@@ -94,7 +94,8 @@ if tpsestimeh>=3:
 
 def load_data():
     df = pd.read_excel("produits.xlsx")  # Remplace par ton fichier
-    df["Marque"] = df["Marque"].astype(str)  # Convertir toutes les valeurs en string
+    df["Marque"] = df["Marque"].astype(str) # Convertir toutes les valeurs en string
+    df["Nom"] = df["Nom"].astype(str)     
     return df
 
 df = load_data()
@@ -136,7 +137,14 @@ proposition.append(f"Tu veux utiliser les marques suivantes: {', '.join(selectio
 
 # Filtrage par marque
 if "Aucune" not in selection:
-    df = df[df["Marque"].isin(selection) | (df["Marque"] == "Non communiquée")]
+    df_filtre = df[df["Marque"].isin(selection)]
+    # Vérifie s'il y a des produits de Ref "B"
+    if df_filtre[df_filtre["Ref"] == "B"].empty:
+        # Ajoute les produits avec Marque == "Non communiquée"
+        df_suppl = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre ")]
+        df_filtre = pd.concat([df_filtre, df_suppl], ignore_index=True)
+    df = df_filtre
+
 #Filtrage caféine
 if cafeine==0:
      df = df[df["Caf"] == 0]
