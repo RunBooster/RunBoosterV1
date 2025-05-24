@@ -373,13 +373,13 @@ def envoyer_email(destinataire, fichier_pdf):
 
 if "Aucune" in selection:
      RecoMarque = [
-          "Nous te conseillons de choisir une ou deux marques de nutrition pour ne pas que ton plan devienne un capharnaüm",
+          "Nous te conseillons de choisir une ou deux marques de nutrition pour ne pas que ton plan devienne un capharnaüm.",
           "Nos recommandations:",
           "+Baouw pour des produits bio et naturel, respectueux du corps et très gourmands.",
           "+Decathlon pour la simplicité d'accès à ses rayons et ses prix très abordables",
           "+Nduranz et 4Endurance pour leurs prix imbattables",
           "+Naak pour ses engagements", 
-          "+Ergysport, Authentic Nutrition, CooknRun, Atlet Nutrition, Meltonic, Gourmiz pour leur valeur et leur origine."]
+          "+Ergysport, Authentic Nutrition, CooknRun, Atlet Nutrition, Meltonic, Gourmiz pour leurs valeurs et leur origine."]
      st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in RecoMarque]))
           
 
