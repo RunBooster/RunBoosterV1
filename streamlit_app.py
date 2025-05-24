@@ -319,7 +319,7 @@ def generer_pdf(contenu):
     pdf.set_font("Arial", style="B", size=14)
 
     # Titre du PDF
-    pdf.cell(200, 10, "Résumé de votre Plan Nutritionnel", ln=True, align='C')
+    pdf.cell(200, 10, "Résumé de ton Plan Nutritionnel", ln=True, align='C')
     pdf.ln(10)
 
     # Ajout du contenu en forçant l'encodage UTF-8
@@ -381,7 +381,9 @@ if st.button("Créer mon Plan Nutritionnel"):
               st.write(ligne)
          for ligne in plan:
               st.write(ligne)
-         st.write("\n".join(conseils))
+              
+         st.markdown("### Conseils nutritionnels 🥤🍌\n")
+         st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
 
 
 
