@@ -385,8 +385,7 @@ if "Aucune" in selection and not (filtrer_densite | filtrer_prix | filtrer_prix2
 
 
 nom = st.text_input("Prénom (facultatif)")
-email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif (facultatif)")
-st.write("Tu acceptes de recevoir l'actu RunBooster en laissant ton adresse mail (résiliable à tout moment).")
+email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster en cliquant sur le bouton 'Recevoir' (facultatif)")
 
 if st.button("Créer mon Plan Nutritionnel"):
 # Affichage du plan nutritionnel
