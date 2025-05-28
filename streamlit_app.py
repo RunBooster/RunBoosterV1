@@ -172,6 +172,30 @@ st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(
         "densite": "Densité (glucide dans 1g de produit)",
     }))
 
+
+
+if "Aucune" in selection and cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
+    df = df[df["Caf"] == 0]
+    refs = ["B", "BA", "C", "G"]
+    df_sel12h = df[df["Ref"].isin(refs)]
+    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+if "Aucune" in selection and cas==5: 
+    df = df[df["Caf"] == 0]
+    refs = ["B", "BS", "BAS", "BA", "C", "CS"]
+    df_sel12h = df[df["Ref"].isin(refs)]
+    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+if "Aucune" in selection and cas==7 and 5<=tpsestimeh<12: 
+    df = df[df["Caf"] == 0]
+    refs = ["B", "BA", "BAS", "C", "CS", "G"]
+    df_sel12h = df[df["Ref"].isin(refs)]
+    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+if "Aucune" in selection and cas==7 and tpsestimeh>=12:
+     df = df[df["Caf"] == 0]
+     df = df.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+
+
+
+
 st.subheader("Proposition d'un plan nutritionnel:", divider="red")
 plan = []
 def ajuster_x(glucide, min_cible, max_cible):
