@@ -82,7 +82,7 @@ proposition.append(f"➜Tu consommeras {Cho}g de glucides par heure, soit {int(C
 
 if temp and tpsestimeh>=2:
         #st.write('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium')
-        proposition.append('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium.')
+        proposition.append('➜Tu ajouteras un peu de sel de table dans ta gourde, pour un apport de Sodium total de 400mg par heure de course (1g de sel de table=400mg de Sodium), pour compenser tes pertes en sodium.')
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
         proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
@@ -267,6 +267,8 @@ elif cas in [3, 4, 5, 6, 7]:
         
         produits_text = []
         glucide_tot=0
+        sodium_tot=0
+        caf_tot=0
         for produit in produits_suivants.itertuples():
             if glucide_restant <= 0:
                 break
@@ -274,18 +276,29 @@ elif cas in [3, 4, 5, 6, 7]:
                 produits_text.append(f"+ 1 {produit.Nom} de la marque {produit.Marque}")
                 glucide_restant -= produit.Glucide
                 glucide_tot+=produit.Glucide
+                sodium_tot+=produit.Sodium
+                caf_tot+=produit.Caf
             
         glucide_restant = Cho - glucide_tot
         x_1 = round(glucide_restant / glucide_1, 1)
-        plan.append(f"🕐 Heure {heure}: {x_1} {unite} de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        glucide_tot+=produit_1.Glucide*x_1
+        sodium_tot+=produit_1.Sodium*x_1*1000
+        caf_tot+=produit_1.Caf*x_1
+        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg): {x_1} {unite} de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
     if derniere_heure > 0:
+        glucide_tot=0
+        sodium_tot=0
+        caf_tot=0
         if cas == 3:
             produit_1 = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))].sample(1).iloc[0]
         else:
             produit_1 = df[df["Ref"] == "B"].sample(1).iloc[0]
         glucide_1 = produit_1["Glucide"]
         x_1, unite = ajuster_x(glucide_1, 30 * derniere_heure, 40 * derniere_heure)
+        glucide_tot+=produit_1.Glucide*x_1
+        sodium_tot+=produit_1.Sodium*x_1
+        caf_tot+=produit_1.Caf*x_1
 
         glucide_restant = (Cho * derniere_heure) - (x_1 * glucide_1)
         if cas == 3 or cas == 5:
@@ -304,8 +317,11 @@ elif cas in [3, 4, 5, 6, 7]:
             if produit.Glucide <= glucide_restant:
                 produits_text.append(f"+ 1 {produit.Nom} de la marque {produit.Marque}")
                 glucide_restant -= produit.Glucide
+                glucide_tot+=produit.Glucide
+                sodium_tot+=produit.Sodium*1000
+                caf_tot+=produit.Caf
         
-        plan.append(f"🕐 Heure {int(tpsestimeh)} (dernière heure) : {x_1}g de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg) : {x_1}g de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
 
      
