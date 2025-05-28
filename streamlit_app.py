@@ -136,7 +136,7 @@ if "Aucune" not in selection:
     # Vérifie s'il y a des produits de Ref "B"
     if df_filtre[df_filtre["Ref"] == "B"].empty:
         # Ajoute les produits avec Marque == "Non communiquée"
-        df_suppl = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre ")]
+        df_suppl = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
         df_filtre = pd.concat([df_filtre, df_suppl], ignore_index=True)
     df = df_filtre
 
