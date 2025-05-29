@@ -279,12 +279,17 @@ elif cas in [3, 4, 5, 6, 7]:
                 sodium_tot+=produit.Sodium
                 caf_tot+=produit.Caf
             
-        glucide_restant = Cho - glucide_tot
-        x_1 = round(glucide_restant / glucide_1, 1)
+        if unite is "g":
+             glucide_restant = Cho - glucide_tot
+             x_1 = round(glucide_restant / glucide_1, 0)
+        else:
+             x_brut = (Cho - glucide_tot) / glucide_1
+             valeurs_possibles = [0.5, 1, 2, 3]
+             x_1 = min(valeurs_possibles, key=lambda x: abs(x - x_brut))
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1*1000
         caf_tot+=produit_1.Caf*x_1
-        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg): {x_1} {unite} de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg): {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
     if derniere_heure > 0:
         glucide_tot=0
@@ -321,7 +326,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 sodium_tot+=produit.Sodium*1000
                 caf_tot+=produit.Caf
         
-        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg) : {x_1}g de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg) : {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
 
      
