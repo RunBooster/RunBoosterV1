@@ -259,14 +259,20 @@ elif cas in [3, 4, 5, 6, 7]:
         elif cas == 4:
             if heure == 0:
                 produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
+                if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si produits caféinés sont absents
+                      produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10)]
+                      if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
+                           produits_filtrés = df[(df["Ref"].isin(["BA"])) & (df["Glucide"] < glucide_restant+10)]
             else:
                 produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
+                if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
+                           produits_filtrés = df[(df["Ref"].isin(["BA"])) & (df["Glucide"] < glucide_restant+10)]
 
         elif cas == 6:
             hcaf=int(tpsestimeh)-1
             if heure == 0 or heure == hcaf:
                  produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
-                 if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits salés sont absents
+                 if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits caféinés sont absents
                       produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
             else:
                  produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
@@ -279,7 +285,7 @@ elif cas in [3, 4, 5, 6, 7]:
         elif cas == 7 and heure == hcaf:
             produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
             hcaf=hcaf+4
-            if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits salés sont absents
+            if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits caféinés sont absents
                 produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
         else:
             produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
