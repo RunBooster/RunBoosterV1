@@ -264,9 +264,9 @@ elif cas in [3, 4, 5, 6, 7]:
                       if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
                            produits_filtrés = df[(df["Ref"].isin(["BA"])) & (df["Glucide"] < glucide_restant+10)]
             else:
-                produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
-                if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
-                           produits_filtrés = df[(df["Ref"].isin(["BA"])) & (df["Glucide"] < glucide_restant+10)]
+                 produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
+                 if produits_filtrés["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
+                      produits_filtrés = df[(df["Ref"].isin(["BA"])) & (df["Glucide"] < glucide_restant+10)]
 
         elif cas == 6:
             hcaf=int(tpsestimeh)-1
