@@ -175,24 +175,31 @@ st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(
 
 
 if "Aucune" in selection and cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
-    df = df[df["Caf"] == 0]
     refs = ["B", "BA", "C", "G"]
-    df_sel12h = df[df["Ref"].isin(refs)]
-    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
+    prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df = pd.concat([prodcaf, prodreduits])
 if "Aucune" in selection and cas==5: 
     df = df[df["Caf"] == 0]
     refs = ["B", "BS", "BAS", "BA", "C", "CS"]
     df_sel12h = df[df["Ref"].isin(refs)]
     df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
 if "Aucune" in selection and cas==7 and 5<=tpsestimeh<12: 
-    df = df[df["Caf"] == 0]
     refs = ["B", "BA", "BAS", "C", "CS", "G"]
-    df_sel12h = df[df["Ref"].isin(refs)]
-    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
+    prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df = pd.concat([prodcaf, prodreduits])
 if "Aucune" in selection and cas==7 and tpsestimeh>=12:
-     df = df[df["Caf"] == 0]
-     df = df.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-
+    refs = ["B", "BS", "BA", "BAS", "C", "CS", "G"]
+    df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
+    prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df = pd.concat([prodcaf, prodreduits])
 
 
 
@@ -224,6 +231,7 @@ elif cas in [3, 4, 5, 6, 7]:
     heures_pleines = int(tpsestimeh)
     derniere_heure = tpsestimeh % 1
     produit_1 = None
+    hcaf=0
     for heure in np.arange(0, heures_pleines, 1):
         if heure % 2 == 0 or produit_1 is None:
             if cas == 3:
