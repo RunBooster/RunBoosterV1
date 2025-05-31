@@ -340,7 +340,10 @@ elif cas in [3, 4, 5, 6, 7]:
         if cas == 3 or cas == 5:
             produits_suivants = df[(df["Ref"].isin(["C", "CS", "BA", "BAS"]))].sample(1)
         elif cas == 4:
-            produits_suivants = df[(df["Ref"].isin(["G", "C"]))].sample(1)
+             produits_suivants = df[(df["Ref"].isin(["G", "C"]))].sample(1)
+             if produits_suivants["Ref"].isin(["G", "C"]).sum() == 0:  # Vérifie si gels et compotes sont absents
+                  produits_suivants = df[(df["Ref"].isin(["BA"]))].sample(1)
+             
         elif cas == 6:
             produits_suivants = df[(df["Ref"].isin(["G", "C", "BA"]))].sample(1)
         else:
