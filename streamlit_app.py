@@ -172,8 +172,9 @@ st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(
         "densite": "Densité (glucide dans 1g de produit)",
     }))
 
-
-
+refsel = ["BS", "BAS", "CS"]
+df_prodsel = df[df["Ref"].isin(refsel)]
+filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
 if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
     refs = ["B", "BA", "C", "G"]
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
@@ -183,11 +184,11 @@ if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit
     df = pd.concat([prodcaf, prodreduits])
 if cas==3: 
     df = df[df["Caf"] == 0]
-    refs = ["BAS", "BA", "C", "CS"]
+    refs = ["BA", "C"]
     df_sel12h = df[df["Ref"].isin(refs)]
     boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
     barreetcompote = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df = pd.concat([boissonfinisher, barreetcompote])
+    df = pd.concat([boissonfinisher, barreetcompote, filtre_prodsel])
 if cas==5: 
     df = df[df["Caf"] == 0]
     refs = ["B", "BS", "BAS", "BA", "C", "CS"]
