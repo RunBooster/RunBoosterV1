@@ -239,7 +239,7 @@ elif cas in [3, 4, 5, 6, 7]:
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 15, int(random.uniform(15, 25)))
             elif cas == 4 or cas == 6:
-                 produit_1 = df[df["Ref"] == "B"].sample(1).iloc[0]
+                 produit_1 = df[(df["Caf"] == 0) & (df["Ref"] == "B")].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 30, int(random.uniform(30, 45)))
             elif cas == 5:
@@ -247,7 +247,7 @@ elif cas in [3, 4, 5, 6, 7]:
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 25, int(random.uniform(25, 30)))
             else:
-                 produit_1 = df[df["Ref"].isin(["B", "BS"])].sample(1).iloc[0]
+                 produit_1 = df[(df["Caf"] == 0) & (df["Ref"].isin(["B", "BS"]))].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 30, int(random.uniform(30, 45)))
 
@@ -255,17 +255,34 @@ elif cas in [3, 4, 5, 6, 7]:
         glucide_restant = Cho - (x_1 * glucide_1)
         if cas == 3 or cas == 5:
             produits_filtrés = df[(df["Ref"].isin(["C", "CS", "BA", "BAS"])) & (df["Glucide"] < glucide_restant+10)]
+             
         elif cas == 4:
-            produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10)]
+            if heure == 0:
+                produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
+            else:
+                produits_filtrés = df[(df["Ref"].isin(["G", "C"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
+
         elif cas == 6:
-            produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
+            hcaf=int(tpsestimeh)-1
+            if heure == 0 or heure == hcaf:
+                 produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
+                 if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits salés sont absents
+                      produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
+            else:
+                 produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
+
         elif cas == 7 and heure > 4 and heure % 2 != 0: #on met du salé toutes les heures impaires
-            produits_filtrés = df[(df["Ref"].isin(["G", "CS", "BAS"])) & (df["Glucide"] < glucide_restant+10)]
+            produits_filtrés = df[(df["Ref"].isin(["G", "CS", "BAS"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
             if produits_filtrés["Ref"].isin(["CS", "BAS"]).sum() == 0:  # Vérifie si produits salés sont absents
-                produits_supplémentaires = df[(df["Ref"].isin(["BA", "C"])) & (df["Glucide"] < glucide_restant + 10)]
+                produits_supplémentaires = df[(df["Ref"].isin(["BA", "C"])) & (df["Glucide"] < glucide_restant + 10) & (df["Caf"] == 0)]
                 produits_filtrés = pd.concat([produits_filtrés, produits_supplémentaires])
+        elif cas == 7 and heure == hcaf:
+            produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
+            hcaf=hcaf+4
+            if produits_filtrés["Ref"].isin(["G", "C", "BA"]).sum() == 0:  # Vérifie si produits salés sont absents
+                produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
         else:
-            produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
+            produits_filtrés = df[(df["Ref"].isin(["G", "C", "BA"])) & (df["Glucide"] < glucide_restant+10) & (df["Caf"] == 0)]
 
 
         if len(produits_filtrés) >= 2:
@@ -287,7 +304,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 sodium_tot+=produit.Sodium
                 caf_tot+=produit.Caf
             
-        if unite is "g":
+        if unite == "g":
              glucide_restant = Cho - glucide_tot
              x_1 = round(glucide_restant / glucide_1, 0)
         else:
@@ -297,7 +314,7 @@ elif cas in [3, 4, 5, 6, 7]:
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1*1000
         caf_tot+=produit_1.Caf*x_1
-        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg): {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
     if derniere_heure > 0:
         glucide_tot=0
@@ -334,7 +351,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 sodium_tot+=produit.Sodium*1000
                 caf_tot+=produit.Caf
         
-        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg) : {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg, Caféine: {int(caf_tot)}mg) : {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
 
      
