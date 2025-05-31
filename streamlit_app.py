@@ -191,23 +191,17 @@ if cas==3:
     df = pd.concat([boissonfinisher, barreetcompote, filtre_prodsel])
 if cas==5: 
     df = df[df["Caf"] == 0]
-    refs = ["B", "BS", "BAS", "BA", "C", "CS"]
+    refs = ["B", "BA", "C"]
     df_sel12h = df[df["Ref"].isin(refs)]
-    df = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-if cas==7 and 5<=tpsestimeh<12: 
-    refs = ["B", "BA", "BAS", "C", "CS", "G"]
+    filtre_cas5 = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df = pd.concat([filtre_cas5, filtre_prodsel])
+if cas==7:
+    refs = ["B", "BA", "C", "G"]
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
     prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
     prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df = pd.concat([prodcaf, prodreduits])
-if cas==7 and tpsestimeh>=12:
-    refs = ["B", "BS", "BA", "BAS", "C", "CS", "G"]
-    df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
-    prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df = pd.concat([prodcaf, prodreduits])
+    df = pd.concat([prodcaf, prodreduits, filtre_prodsel])
 
 
 
