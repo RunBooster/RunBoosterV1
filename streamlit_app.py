@@ -174,7 +174,7 @@ st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(
 
 refsel = ["BS", "BAS", "CS"]
 df_prodsel = df[df["Ref"].isin(refsel)]
-filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
 df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
 if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
     refs = ["B", "BA", "C", "G"]
