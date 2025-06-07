@@ -226,7 +226,11 @@ elif cas == 2:
     produit_B = df[df["Ref"] == "B"].sample(1).iloc[0]
     glucide = produit_B["Glucide"]
     x, unite = ajuster_x(glucide, Chotot-5, Chotot+5)  # Ajuste x et récupère l'unité
-    plan.append(f"Consommer {x} {unite} de {produit_B['Nom']} de marque {produit_B['Marque']} dans 500mL d’eau.")
+    if unite == "sachet":
+         x_brut = Chotot / glucide
+         valeurs_possibles = [0.5, 1, 2, 3]
+         x = min(valeurs_possibles, key=lambda x: abs(x - x_brut))
+    plan.append(f"Consommer {x} {unite} de {produit_B['Nom']} de marque {produit_B['Marque']} avec 500mL d’eau.")
 
 
 elif cas in [3, 4, 5, 6, 7]:
