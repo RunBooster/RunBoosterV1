@@ -174,7 +174,7 @@ st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(
 
 refsel = ["BS", "BAS", "CS"]
 df_prodsel = df[df["Ref"].isin(refsel)]
-filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
+filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
 df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
 if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
     refs = ["B", "BA", "C", "G"]
@@ -250,15 +250,19 @@ elif cas in [3, 4, 5, 6, 7]:
                  produit_1 = df[(df["Caf"] == 0) & (df["Ref"] == "B")].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 30, int(random.uniform(30, 45)))
-            elif cas == 5:
-                 produit_1 = df[df["Ref"].isin(["B", "BS"])].sample(1).iloc[0]
+            elif cas == 5: 
+                 if hsel==heure:
+                      hsel+=5
+                      produit_1 = df[df["Ref"].isin(["B", "BS"])].sample(1).iloc[0]
+                 else:
+                      produit_1 = df[df["Ref"].isin(["B"])].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
                  x_1, unite = ajuster_x(glucide_1, 25, int(random.uniform(25, 30)))
             elif cas==7 and hsel==heure:
-                 hsel+=4
+                 hsel+=5
                  produit_1 = df[(df["Caf"] == 0) & (df["Ref"].isin(["B", "BS"]))].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
-                 x_1, unite = ajuster_x(glucide_1, 30, int(random.uniform(30, 45)))
+                 x_1, unite = ajuster_x(glucide_1, 30, int(random.uniform(30, 40)))
             else:
                  produit_1 = df[(df["Caf"] == 0) & (df["Ref"].isin(["B"]))].sample(1).iloc[0]
                  glucide_1 = produit_1["Glucide"]
@@ -267,7 +271,10 @@ elif cas in [3, 4, 5, 6, 7]:
 
         glucide_restant = Cho - (x_1 * glucide_1)
         if cas == 3 or cas == 5:
-            produits_filtrés = df[(df["Ref"].isin(["C", "CS", "BA", "BAS"])) & (df["Glucide"] < glucide_restant+10)]
+             if heure > 4 and heure % 2 != 0: #on met du salé toutes les heures impaires
+                  produits_filtrés = df[(df["Ref"].isin(["C", "CS", "BA", "BAS"])) & (df["Glucide"] < glucide_restant+10)]
+             else:
+                  produits_filtrés = df[(df["Ref"].isin(["C", "BA"])) & (df["Glucide"] < glucide_restant+10)]
              
         elif cas == 4:
             if heure == 0:
