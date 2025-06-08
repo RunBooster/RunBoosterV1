@@ -105,7 +105,10 @@ gout = st.multiselect("Des goûts que tu n'aimes pas? 👇",
     ["Aucun", "Chocolat", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte",  ],
     default=["Aucun"])
 if "Chocolat" in gout:
-    df = df[~(df['Nom'].str.contains("Chocolat|Chocolate|chocolat|Choco", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+    df = df[~(df['Nom'].str.contains("Choc", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Fruits rouges" in gout:
+    df = df[~(df['Nom'].str.contains("Fruits Rouges|fruits rouges|Fraise|Fraises|Framboise|Framboises|Cassis|Myrtille|Mures|Cranberries|Canneberges|Cranberry", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+
 
 st.write("As-tu des critères? 👇")
 filtrer_bio = st.checkbox("Produits Bio")
