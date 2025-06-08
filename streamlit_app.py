@@ -101,6 +101,11 @@ marques = ["Aucune"] + sorted(df["Marque"].dropna().unique().tolist(), key=str)
 selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 👇", marques, default=["Aucune"])
 st.write("Choisi 'Aucune' si tu veux laisser RunBooster choisir pour toi. Sinon, décoche le." )
 
+gout = st.multiselect("Des goûts que tu n'aimes pas? 👇",
+    ["Aucun", "Chocolat", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte",  ],
+    default=["Aucun"])
+if "Chocolat" in gout:
+    df = df[~(df['Nom'].str.contains("Chocolat|Chocolate|chocolat|Choco", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
 
 st.write("As-tu des critères? 👇")
 filtrer_bio = st.checkbox("Produits Bio")
