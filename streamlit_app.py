@@ -37,8 +37,6 @@ st.write('➜Temps de course estimé:', int(tpsestime), 'minutes, soit', int(tps
 proposition.append(f"pour un temps estimé de {int(tpsestime)} minutes, soit {int(tpsestimeh)}h {int((tpsestimeh % 1) * 60)} min :")
 
 objectif=st.radio("Choisi ton objectif 👇", ["Performance", "Plaisir", "Finisher"], horizontal=True)
-temp=st.checkbox("Cocher si plus de 20°C annoncés")
-st.divider()
 if objectif=="Performance" and tpsestimeh<1:
         cas=1
         Cho=0
@@ -67,6 +65,10 @@ elif objectif=="Performance" and tpsestimeh>=5:
         Cho=85
         cas=7
         cafeine=1
+elif objectif=="Performance" and tpsestimeh>=5 and discipline=="Trail" and 3<=cote<620:
+        Cho=70
+        cas=7
+        cafeine=1
 elif objectif=="Plaisir" and tpsestimeh>=2:
         Cho=60
         cas=5
@@ -75,11 +77,12 @@ else:
         cas=3
         Cho=40
         cafeine=0
-
+st.write("Tu consommeras {Cho}g de glucides par heure de course")
 Chotot=Cho*tpsestimeh
 #st.write('➜Tu consommeras', Cho,'g de glucides par heure, soit', int(Chotot), 'grammes de glucides sur la course')
 proposition.append(f"➜Tu consommeras {Cho}g de glucides par heure, soit {int(Chotot)} grammes de glucides sur la course.")
-
+temp=st.checkbox("Cocher si plus de 20°C annoncés")
+st.divider()
 if temp and tpsestimeh>=2:
         #st.write('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium')
         proposition.append('➜Tu ajouteras un peu de sel de table dans ta gourde, pour un apport de Sodium total de 400mg par heure de course (1g de sel de table=400mg de Sodium), pour compenser tes pertes en sodium.')
@@ -102,12 +105,58 @@ selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 
 st.write("Choisi 'Aucune' si tu veux laisser RunBooster choisir pour toi. Sinon, décoche le." )
 
 gout = st.multiselect("Des goûts que tu n'aimes pas? 👇",
-    ["Aucun", "Chocolat", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte",  ],
+    ["Aucun", "Chocolat", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte", "Betterave"],
     default=["Aucun"])
 if "Chocolat" in gout:
-    df = df[~(df['Nom'].str.contains("Choc", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+    df = df[~(df['Nom'].str.contains("Choc|Cacao", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
 if "Fruits rouges" in gout:
-    df = df[~(df['Nom'].str.contains("Fruits Rouges|fruits rouges|Fraise|Fraises|Framboise|Framboises|Cassis|Myrtille|Mures|Cranberries|Canneberges|Cranberry", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+    df = df[~(df['Nom'].str.contains("Fruits Rouges|fruits rouges|Fraise|Framboise|Cassis|Myrtille|Mure|Cranberrie|Canneberge|Cranberry", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Menthe" in gout:
+    df = df[~(df['Nom'].str.contains("Menthe|Mint", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Citron" in gout:
+    df = df[~(df['Nom'].str.contains("Citron|Lemon|Citrus", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Agrumes" in gout:
+    df = df[~(df['Nom'].str.contains("Agrum|Citron|Mandar|Orang|Pamplem|Pomelo", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Figue" in gout:
+    df = df[~(df['Nom'].str.contains("Fig", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Raisin" in gout:
+    df = df[~(df['Nom'].str.contains("Raisin|Grape", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Banane" in gout:
+    df = df[~(df['Nom'].str.contains("Banan", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Kiwi" in gout:
+    df = df[~(df['Nom'].str.contains("Kiwi", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Ananas" in gout:
+    df = df[~(df['Nom'].str.contains("Anana|Pineapple", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Pomme" in gout:
+    df = df[~(df['Nom'].str.contains("Pomme|Apple", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Peche" in gout:
+    df = df[~(df['Nom'].str.contains("Peche|Peach", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Abricot" in gout:
+    df = df[~(df['Nom'].str.contains("Abricot|Apricot", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Cranberries" in gout:
+    df = df[~(df['Nom'].str.contains("Cranberrie|Canneberge|Cranberry", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Pruneaux" in gout:
+    df = df[~(df['Nom'].str.contains("Prune", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Cerise" in gout:
+    df = df[~(df['Nom'].str.contains("Cerise|Cherry", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Amande" in gout:
+    df = df[~(df['Nom'].str.contains("Amande|Almond", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Noisette" in gout:
+    df = df[~(df['Nom'].str.contains("Noisette|Hazelnut", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Cacahuete" in gout:
+    df = df[~(df['Nom'].str.contains("Cacahuete|Peanut", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Noix de coco" in gout:
+    df = df[~(df['Nom'].str.contains(" Coco", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Caramel" in gout:
+    df = df[~(df['Nom'].str.contains("Caramel", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Patate douce" in gout:
+    df = df[~(df['Nom'].str.contains("Patate|Potato", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Petits pois" in gout:
+    df = df[~(df['Nom'].str.contains("Pois|Peas", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Carotte" in gout:
+    df = df[~(df['Nom'].str.contains("Carot", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
+if "Betterave" in gout:
+    df = df[~(df['Nom'].str.contains("Betterave|Beet", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
 
 
 st.write("As-tu des critères? 👇")
