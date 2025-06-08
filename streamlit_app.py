@@ -61,11 +61,11 @@ elif objectif=="Performance" and 3<=tpsestimeh<5:
         Cho=80
         cas=6
         cafeine=1
-elif objectif=="Performance" and tpsestimeh>=5:
+elif objectif=="Performance" and tpsestimeh>=5 and cote>=620:
         Cho=85
         cas=7
         cafeine=1
-elif objectif=="Performance" and tpsestimeh>=5 and discipline=="Trail" and 3<=cote<620:
+elif objectif=="Performance" and tpsestimeh>=5:
         Cho=70
         cas=7
         cafeine=1
