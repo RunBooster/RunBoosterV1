@@ -465,7 +465,7 @@ conseils = [
         "alourdirons ton estomac.",
         "+En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
         "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
-        "   ",
+        "Se réserver le droit de prendre un gel caféiné en cas de coup de mou.",
         "ATTENTION :",
         "++Ne dépasse pas 400mg de caféine dans la journée.",
         "++Boire plus de 800mL d'eau par heure peut être dangereux.",
