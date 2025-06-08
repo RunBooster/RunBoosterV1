@@ -77,7 +77,7 @@ else:
         cas=3
         Cho=40
         cafeine=0
-st.write("Tu consommeras {Cho}g de glucides par heure de course")
+st.write("Tu consommeras", (Cho), "g de glucides par heure de course")
 Chotot=Cho*tpsestimeh
 #st.write('➜Tu consommeras', Cho,'g de glucides par heure, soit', int(Chotot), 'grammes de glucides sur la course')
 proposition.append(f"➜Tu consommeras {Cho}g de glucides par heure, soit {int(Chotot)} grammes de glucides sur la course.")
