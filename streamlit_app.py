@@ -254,7 +254,7 @@ if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
     prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df = pd.concat([prodcaf, prodreduits])
 if cas==3: 
     df = df[df["Caf"] == 0]
@@ -270,12 +270,14 @@ if cas==5:
     filtre_cas5 = df_sel12h.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
     df = pd.concat([filtre_cas5, filtre_prodsel])
 if cas==7:
-    refs = ["B", "BA", "C", "G"]
+    refs = ["B", "C", "G"]
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
     prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
+    df_barre = df[(df["Ref"] == "BA") & (df["Caf"] == 0)]
+    barrereduit = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df = pd.concat([prodcaf, prodreduits, filtre_prodsel])
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
+    df = pd.concat([prodcaf, prodreduits, filtre_prodsel, barrereduit])
 
 
 
