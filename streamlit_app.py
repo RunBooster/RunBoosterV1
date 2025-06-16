@@ -77,6 +77,15 @@ else:
         cas=3
         Cho=40
         cafeine=0
+     
+if objectif=="Performance" and 3<=tpsestimeh:
+     values = list(range(60, 91))
+     Cho_indiv = st.select_slider(
+        "Modifie ta consomation de glucides si tu la penses trop haute, ou laisse la valeur par défaut:",
+        options=values,
+        value=Cho)
+     Cho=Cho_indiv
+     
 st.write("Tu consommeras", (Cho), "g de glucides par heure de course")
 Chotot=Cho*tpsestimeh
 #st.write('➜Tu consommeras', Cho,'g de glucides par heure, soit', int(Chotot), 'grammes de glucides sur la course')
