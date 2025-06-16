@@ -258,7 +258,7 @@ if filtrer_produits:
         # Ajoute les produits avec Marque == "Non communiquée"
         boissonfinisher = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
         df = pd.concat([boissonfinisher, df_selectionproduits])
-    elif:
+    else:
          df=df_selectionproduits
 # Affichage des résultats
 st.write("### Produits sélectionnés :")
