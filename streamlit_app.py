@@ -254,10 +254,10 @@ if filtrer_produits:
     if objectif=="Finisher":
          boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
          df = pd.concat([boissonfinisher, df_selectionproduits])
-    if df_selectionproduits[df_selectionproduits["Ref"] == "B"].empty:
+    elif df_selectionproduits[df_selectionproduits["Ref"] == "B"].empty:
         # Ajoute les produits avec Marque == "Non communiquée"
-        boissonfinisher = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
-        df = pd.concat([boissonfinisher, df_selectionproduits])
+         boissonfinisher = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
+         df = pd.concat([boissonfinisher, df_selectionproduits])
     else:
          df=df_selectionproduits
 # Affichage des résultats
