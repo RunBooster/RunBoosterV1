@@ -82,7 +82,7 @@ else:
 if objectif=="Performance" and 3<=tpsestimeh:
      values = list(range(60, 91))
      Cho_indiv = st.select_slider(
-        "Modifie ta consomation de glucides si tu la penses trop haute, ou laisse la valeur par défaut:",
+        "Modifie ta consomation de glucides (g/h) si tu la penses trop haute, ou laisse la valeur par défaut:",
         options=values,
         value=Cho)
      Cho=Cho_indiv
