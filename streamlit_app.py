@@ -15,6 +15,15 @@ left.image("RunBooster(1).png", width=100)
 middle.subheader("Boost ton run grâce à une alimentation controlée")
 st.divider()
 
+def load_data():
+    df = pd.read_excel("produits.xlsx")  # Remplace par ton fichier
+    df["Marque"] = df["Marque"].astype(str) # Convertir toutes les valeurs en string
+    df["Nom"] = df["Nom"].astype(str)     
+    return df
+df = load_data()
+df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
+df = df[~((df["Ref"] == 'B') & (df["Caf"] != 0))]
+
 proposition = []
 
 discipline = st.radio("Choisi ta discipline 👇", ["Trail", "Course sur route / Vélo"], horizontal=True)
@@ -58,10 +67,12 @@ elif objectif=="Performance" and 2<=tpsestimeh<3:
         Cho=70
         cas=4
         cafeine=1
+        df = df[~(df["Ref"].isin(["BA","BAS","BS", "CS"]))]
 elif objectif=="Performance" and 3<=tpsestimeh<5:
         Cho=80
         cas=6
         cafeine=1
+        df = df[~(df["Ref"].isin(["BS"]))]
 elif objectif=="Performance" and tpsestimeh>=5 and cote<620:
         Cho=70
         cas=7
@@ -73,11 +84,13 @@ elif objectif=="Performance" and tpsestimeh>=5:
 elif objectif=="Plaisir" and tpsestimeh>=2:
         Cho=60
         cas=5
-        cafeine=0     
+        cafeine=0   
+        df = df[~(df["Ref"].isin(["G"]))]
 else:
         cas=3
         Cho=40
         cafeine=0
+        df = df[~(df["Ref"].isin(["G"]))]
      
 if objectif=="Performance" and 3<=tpsestimeh:
      values = list(range(60, 91))
@@ -99,14 +112,6 @@ if temp and tpsestimeh>=2:
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
         proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
-
-def load_data():
-    df = pd.read_excel("produits.xlsx")  # Remplace par ton fichier
-    df["Marque"] = df["Marque"].astype(str) # Convertir toutes les valeurs en string
-    df["Nom"] = df["Nom"].astype(str)     
-    return df
-
-df = load_data()
 
 # Liste des marques uniques avec "Aucune" en option
 marques = ["Aucune"] + sorted(df["Marque"].dropna().unique().tolist(), key=str)
@@ -274,7 +279,6 @@ st.divider()
 refsel = ["BS", "BAS", "CS"]
 df_prodsel = df[df["Ref"].isin(refsel)]
 filtre_prodsel=df_prodsel.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
-df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
 if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit pas le bazar
     refs = ["B", "BA", "C", "G"]
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
