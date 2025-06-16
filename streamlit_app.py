@@ -31,7 +31,7 @@ else:
      tpsh=st.number_input("Heures", min_value=0)
      tpsm=st.number_input("Minutes", min_value=0, max_value=59)
      tpsestime=(tpsh*60)+tpsm
-     cote=0
+     cote=700
      proposition.append(f"Plan nutritionnel pour ta course de {distance} kms,")
 tpsestimeh=tpsestime/60
 st.write('➜Temps de course estimé:', int(tpsestime), 'minutes, soit', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
