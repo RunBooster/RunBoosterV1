@@ -91,6 +91,8 @@ else:
         Cho=40
         cafeine=0
         df = df[~(df["Ref"].isin(["G"]))]
+        df = df[~((df["Ref"] == "B") & ~df["Nom"].fillna("").str.startswith(("Jus", "Sirop")))]
+
      
 if objectif=="Performance" and 3<=tpsestimeh:
      values = list(range(60, 91))
