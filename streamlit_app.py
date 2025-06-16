@@ -207,7 +207,10 @@ proposition.append(f"--> Tu veux utiliser les marques suivantes: {', '.join(sele
 if "Aucune" not in selection:
     df_filtre = df[df["Marque"].isin(selection)]
     # Vérifie s'il y a des produits de Ref "B"
-    if df_filtre[df_filtre["Ref"] == "B"].empty:
+    if objectif=="Finisher":
+         df_suppl = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
+         df_filtre = pd.concat([df_filtre, df_suppl], ignore_index=True)
+    elif df_filtre[df_filtre["Ref"] == "B"].empty:
         # Ajoute les produits avec Marque == "Non communiquée"
         df_suppl = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
         df_filtre = pd.concat([df_filtre, df_suppl], ignore_index=True)
