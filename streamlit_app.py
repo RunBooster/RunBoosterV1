@@ -240,13 +240,33 @@ if (filtrer_densite & (filtrer_prix | filtrer_prix2)):
      df = df_prixdensite.sort_values(["Ref", "densite"], ascending=False).groupby("Ref").head(1)
 
 
+st.divider()
+filtrer_produits = st.checkbox("Critères avancés")
+if filtrer_produits:
+    # Crée une colonne de labels combinés pour affichage
+    df["label"] = df["Marque"] + " - " + df["Nom"]
+    # Multiselect avec Marque + Nom
+    selected_labels = st.multiselect(
+        "Sélectionne tes produits préférés, avec au MINIMUM une Boisson et une Compote ou Barre:",
+        options=df["label"])
+    # Filtrage du DataFrame d'origine via les labels
+    df_selectionproduits = df[df["label"].isin(selected_labels)]
+    if objectif=="Finisher":
+         boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
+    if df_selectionproduits[df_selectionproduits["Ref"] == "B"].empty:
+        # Ajoute les produits avec Marque == "Non communiquée"
+        boissonfinisher = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
+    df = pd.concat([boissonfinisher, df_selectionproduits])
 # Affichage des résultats
-st.write("### Produits trouvés :")
+st.write("### Produits sélectionnés :")
 st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(columns={
         "prix": "Prix d'1g de glucide",
         "Glucide": "Glucides (g)",
         "densite": "Densité (glucide dans 1g de produit)",
     }))
+     
+st.divider()
+
 
 refsel = ["BS", "BAS", "CS"]
 df_prodsel = df[df["Ref"].isin(refsel)]
