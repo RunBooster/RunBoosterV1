@@ -253,13 +253,16 @@ if filtrer_produits:
     df_selectionproduits = df[df["label"].isin(selected_labels)]
     if objectif=="Finisher":
          boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
+         df = pd.concat([boissonfinisher, df_selectionproduits])
     if df_selectionproduits[df_selectionproduits["Ref"] == "B"].empty:
         # Ajoute les produits avec Marque == "Non communiquée"
         boissonfinisher = df[(df["Marque"] == "Non communiquée") & (df["Nom"] == "Sirop pur sucre")]
-    df = pd.concat([boissonfinisher, df_selectionproduits])
+        df = pd.concat([boissonfinisher, df_selectionproduits])
+    elif:
+         df=df_selectionproduits
 # Affichage des résultats
 st.write("### Produits sélectionnés :")
-st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]] .rename(columns={
+st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]].rename(columns={
         "prix": "Prix d'1g de glucide",
         "Glucide": "Glucides (g)",
         "densite": "Densité (glucide dans 1g de produit)",
@@ -296,8 +299,8 @@ if cas==7:
     refs = ["B", "C", "G"]
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
     prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
-    df_barre = df[(df["Ref"] == "BA") & (df["Caf"] == 0)]
-    barrereduit = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
+    df_barre = df[(df["Ref"].isin(["BA"])) & (df["Caf"] == 0)]
+    barrereduit = df_barre.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
     prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df = pd.concat([prodcaf, prodreduits, filtre_prodsel, barrereduit])
