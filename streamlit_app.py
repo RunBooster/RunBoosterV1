@@ -288,7 +288,7 @@ if cas in [1, 2, 4, 6]: #On filtre 2 produits de chaque Ref pour que ça ne soit
     df_ref = df[(df["Ref"].isin(refs)) & (df["Caf"] == 0)]
     prodreduits = df_ref.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(2, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 20) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
+    prodcaf = df_caf.loc[df_caf["Caf"].idxmax()]
     df = pd.concat([prodcaf, prodreduits])
 if cas==3: 
     df = df[df["Caf"] == 0]
@@ -310,7 +310,7 @@ if cas==7:
     df_barre = df[(df["Ref"].isin(["BA"])) & (df["Caf"] == 0)]
     barrereduit = df_barre.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
+    prodcaf = prodcaf = df_caf.loc[df_caf["Caf"].idxmax()]
     df = pd.concat([prodcaf, prodreduits, filtre_prodsel, barrereduit])
 
 
