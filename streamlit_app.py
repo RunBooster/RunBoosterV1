@@ -23,6 +23,7 @@ def load_data():
 df = load_data()
 df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
 df = df[~((df["Ref"] == 'B') & (df["Caf"] != 0))]
+eau=500
 
 proposition = []
 
@@ -111,11 +112,13 @@ st.divider()
 if temp and tpsestimeh>=2:
         #st.write('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium')
         proposition.append('➜Tu ajouteras un peu de sel de table dans ta gourde, pour un apport de Sodium total de 400mg par heure de course (1g de sel de table=400mg de Sodium), pour compenser tes pertes en sodium.')
+        if tpsestimeh>=3:
+            eau=700
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
         proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
 
-# Liste des marques uniques avec "Aucune" en option
+# Liste des marques uniques 
 marques = sorted(df["Marque"].dropna().unique().tolist(), key=str)
 # Sélection multiple des marques
 selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 👇", marques)
@@ -337,7 +340,7 @@ elif cas == 2:
          x_brut = Chotot / glucide
          valeurs_possibles = [0.5, 1, 2, 3]
          x = min(valeurs_possibles, key=lambda x: abs(x - x_brut))
-    plan.append(f"Consommer {x} {unite} de {produit_B['Nom']} de marque {produit_B['Marque']} avec 500mL d’eau.")
+    plan.append(f"Consommer {x} {unite} de {produit_B['Nom']} de marque {produit_B['Marque']} avec {eau}mL d’eau.")
 
 
 elif cas in [3, 4, 5, 6, 7]:
@@ -446,9 +449,10 @@ elif cas in [3, 4, 5, 6, 7]:
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1
         caf_tot+=produit_1.Caf*x_1
-        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
     if derniere_heure > 0:
+        eau=derniere_heure*eau
         glucide_tot=0
         sodium_tot=0
         caf_tot=0
@@ -488,7 +492,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 sodium_tot+=produit.Sodium*1000
                 caf_tot+=produit.Caf
         
-        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg, Caféine: {int(caf_tot)}mg) : {x_1} {unite} dans l'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        plan.append(f"🕐 Dernière heure (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot)}mg, Caféine: {int(caf_tot)}mg) : {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
 
      
