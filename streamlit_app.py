@@ -310,7 +310,7 @@ if cas==7:
     df_barre = df[(df["Ref"].isin(["BA"])) & (df["Caf"] == 0)]
     barrereduit = df_barre.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df_caf = df[(df["Ref"].isin(["G", "BA"])) & (df["Caf"] > 1) & (df["Caf"] <= 101)]
-    prodcaf = df_caf.loc[df_caf["Caf"].idxmax()]
+    prodcaf = df_caf.groupby("Ref", group_keys=False).apply(lambda x: x.sample(n=min(1, len(x))))
     df = pd.concat([prodcaf, prodreduits, filtre_prodsel, barrereduit])
 
 
