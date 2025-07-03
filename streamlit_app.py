@@ -122,8 +122,7 @@ selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 
 st.write("Choisi 'Aucune' si tu veux laisser RunBooster choisir pour toi. Sinon, décoche le." )
 
 gout = st.multiselect("Des goûts que tu n'aimes pas? 👇",
-    ["Aucun", "Chocolat", "Vanille", "Café", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte", "Betterave", "Olive"],
-    default=["Aucun"])
+    ["Chocolat", "Vanille", "Café", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte", "Betterave", "Olive"])
 if "Chocolat" in gout:
     df = df[~(df['Nom'].str.contains("Choc|Cacao", case=False, na=False) & ~df['Nom'].str.contains(" ou ", case=False, na=False))]
 if "Fruits rouges" in gout:
