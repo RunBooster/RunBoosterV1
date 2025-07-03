@@ -116,10 +116,10 @@ if objectif=="Performance" and tpsestimeh>=5:
         proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
 
 # Liste des marques uniques avec "Aucune" en option
-marques = ["Aucune"] + sorted(df["Marque"].dropna().unique().tolist(), key=str)
+marques = sorted(df["Marque"].dropna().unique().tolist(), key=str)
 # Sélection multiple des marques
-selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 👇", marques, default=["Aucune"])
-st.write("Choisi 'Aucune' si tu veux laisser RunBooster choisir pour toi. Sinon, décoche le." )
+selection = st.multiselect("Quelles sont tes marques de nutrition préférées? 👇", marques)
+st.write("Laisse la case vide si tu veux laisser RunBooster choisir pour toi." )
 
 gout = st.multiselect("Des goûts que tu n'aimes pas? 👇",
     ["Chocolat", "Vanille", "Café", "Fruits rouges", "Menthe", "Citron", "Agrumes", "Figue", "Raisin", "Banane", "Kiwi", "Ananas", "Pomme", "Peche", "Abricot", "Cranberries", "Pruneaux", "Cerise", "Amande", "Noisette", "Cacahuete","Noix de coco", "Caramel", "Patate douce", "Petits pois", "Carotte", "Betterave", "Olive"])
@@ -210,7 +210,7 @@ if filtrer_densite:
 proposition.append(f"--> Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
 
 # Filtrage par marque
-if "Aucune" not in selection:
+if selection:
     df_filtre = df[df["Marque"].isin(selection)]
     # Vérifie s'il y a des produits de Ref "B"
     if objectif=="Finisher":
@@ -578,7 +578,7 @@ def envoyer_email(destinataire, fichier_pdf):
         st.error(f"❌ Erreur lors de l'envoi de l'email : {e}")
 
 
-if "Aucune" in selection and not (filtrer_densite | filtrer_prix | filtrer_prix2) and tpsestimeh>=3:
+if not selection and not (filtrer_densite | filtrer_prix | filtrer_prix2) and tpsestimeh>=3:
      RecoMarque = [
           "Nous te conseillons de choisir une ou deux marques de nutrition pour ne pas que ton plan devienne un capharnaüm.",
           "Nos recommandations:",
