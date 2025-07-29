@@ -211,7 +211,7 @@ if filtrer_prix2:
 if filtrer_densite:
     criteres_selectionnes.append("Densité énergétique maximale")
 proposition.append(f"--> Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
-if "Baouw" in marques:
+if "Baouw" in selection:
     proposition.append(f"--> Obtiens 15% de réduction sur tout le site Baouw avec le code RUNBOOSTER15 via le lien suivant: https://www.baouw-organic-nutrition.com/?utm_source=affiliation&utm_medium=runbooster&utm_campaign=runbooster ")
 # Filtrage par marque
 if selection:
