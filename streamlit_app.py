@@ -300,15 +300,7 @@ if filtrer_produits:
         "Sélectionne tes produits préférés, avec au MINIMUM une Boisson et une Compote ou Barre:",
         options=df["label"])
     # Filtrage du DataFrame d'origine via les labels
-    df_selectionproduits = df[df["label"].isin(selected_labels)]
-    selection_valide = False
-    while not selection_valide:
-        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty:
-            selection_valide = True
-        else:
-            st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre")
-            st.stop()  
-            
+    df_selectionproduits = df[df["label"].isin(selected_labels)]            
     if objectif=="Finisher":
          boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
          df = pd.concat([boissonfinisher, df_selectionproduits])
@@ -318,6 +310,14 @@ if filtrer_produits:
          df = pd.concat([boissonfinisher, df_selectionproduits])
     else:
          df=df_selectionproduits
+    selection_valide = False
+    while not selection_valide:
+        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty:
+            selection_valide = True
+        else:
+            st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre")
+            st.stop()  
+            
 # Affichage des résultats
 st.write("### Produits sélectionnés :")
 st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]].rename(columns={
