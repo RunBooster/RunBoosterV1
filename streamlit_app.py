@@ -27,7 +27,7 @@ eau=500
 
 proposition = []
 
-race = st.selectbox("Choisi ta course", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
+race = st.selectbox("Choisi ta course 👇", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
 if race == "Autre":
     distance = st.number_input("Entre la distance de ta course en km", format="%0.1f")
     deniv = st.number_input("Entre le dénivelé positif en m", format="%0f")
