@@ -312,10 +312,10 @@ if filtrer_produits:
          df=df_selectionproduits
     selection_valide = False
     while not selection_valide:
-        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty:
+        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty and not df_selectionproduits[df_selectionproduits["Ref"].isin(["B"])].empty:
             selection_valide = True
         else:
-            st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre")
+            st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre et une Boisson")
             st.stop()  
             
 # Affichage des résultats
