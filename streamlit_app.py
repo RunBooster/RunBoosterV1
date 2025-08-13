@@ -301,6 +301,14 @@ if filtrer_produits:
         options=df["label"])
     # Filtrage du DataFrame d'origine via les labels
     df_selectionproduits = df[df["label"].isin(selected_labels)]
+    selection_valide = False
+    while not selection_valide:
+        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty:
+            selection_valide = True
+        else:
+            st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre")
+            st.stop()  
+        
     if objectif=="Finisher":
          boissonfinisher = df[df["Nom"].fillna("").str.startswith(("Jus", "Sirop"))]
          df = pd.concat([boissonfinisher, df_selectionproduits])
