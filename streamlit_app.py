@@ -27,25 +27,65 @@ eau=500
 
 proposition = []
 
-discipline = st.radio("Choisi ta discipline 👇", ["Trail", "Course sur route / Vélo"], horizontal=True)
-distance = st.number_input("Entre la distance de ta course en km", format="%0.1f")
+race = st.selectbox("Choisi ta course", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
+if race == "Autre":
+    distance = st.number_input("Entre la distance de ta course en km", format="%0.1f")
+    deniv = st.number_input("Entre le dénivelé positif en m", format="%0f")
+    valid_index = st.checkbox("J'ai un index UTMB ou une cote ITRA")
+    if valid_index:
+        cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+        disteff=(distance+(deniv/100))
+        tpsestime=1000*(0.00000006964734390393*(disteff)*(disteff)*(disteff)*(disteff)-0.00006550491191697*(disteff)*(disteff)*(disteff)+0.020181800970007*(disteff)*(disteff)+2.20983621768921*(disteff))/cote
+    else:
+        st.write("Ton temps estimé 👇")
+        tpsh=st.number_input("Heures", min_value=0)
+        tpsm=st.number_input("Minutes", min_value=0, max_value=59)
+        tpsestime=(tpsh*60)+tpsm
+        cote=700
+    proposition.append(f"Plan nutritionnel pour ta course de {distance} kms,")
+elif race == "UTMB":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 174
+    tpsestime=-0.00000688788001739*(cote)*(cote)*(cote)+0.0182221182514*(cote)*(cote)-17.596971526978*(cote)+7337.2207789047
+    tpsinter=0.00170972442749155*(cote)*(cote)-3.31082485336002*(cote)+2134.76741108279
+    tpsinterh=tpsinter/60
+    st.write('⌛ Temps de passage estimé à Courmayeur:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
+    proposition.append(f"Plan nutritionnel pour ton {race},")
+    proposition.append(f"avec un temps de passage estimé à Courmayeur de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min,")
+elif race == "CCC":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 99
+    tpsestime=-0.0000035772693135*(cote)*(cote)*(cote)+0.0094696502843*(cote)*(cote)-9.1536878738006*(cote)+3822.0987443797
+    tpsinter=0.00110605836740463*(cote)*(cote)-2.15953926753332*(cote)+1371.82481156076
+    tpsinterh=tpsinter/60
+    st.write('⌛ Temps de passage estimé à Champex Lac:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
+    proposition.append(f"Plan nutritionnel pour ta {race},")
+    proposition.append(f"avec un temps de passage estimé à Champex Lac de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
+elif race == "OCC":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 58
+    tpsestime=-0.0000018350782781*(cote)*(cote)*(cote)+0.0048352009471*(cote)*(cote)-4.6459913604367*(cote)+1925.1281152845
+elif race == "TDS":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 152
+    tpsestime=-0.0000072623741683*(cote)*(cote)*(cote)+0.0183752233114*(cote)*(cote)-17.0113930227568*(cote)+6818.75621299
+    tpsinter=0.00257053620937511*(cote)*(cote)-4.72963365166168*(cote)+2849.97700254133
+    tpsinterh=tpsinter/60
+    st.write('⌛ Temps de passage estimé à Beaufort:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
+    proposition.append(f"Plan nutritionnel pour ta {race},")
+    proposition.append(f"avec un temps de passage estimé à Beaufort de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
+elif race == "MCC":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 38.5
+    tpsestime=-0.0000019286314478*(cote)*(cote)*(cote)+0.0044463631803*(cote)*(cote)-3.7343821057262*(cote)+1351.6425925073
+elif race == "ETC":
+    cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
+    distance = 15
+    tpsestime=-0.0000010535438858*(cote)*(cote)*(cote)+0.0023650968191*(cote)*(cote)-1.8805758670806*(cote)+622.66999220336
 
-if discipline=="Trail":
-     cote = st.number_input("Entre ta cote ITRA ou UTMB Index", min_value=1, value=500)
-     deniv = st.number_input("Entre le dénivelé positif en m", format="%0f")
-     disteff=(distance+(deniv/100))
-     tpsestime=1000*(0.00000006964734390393*(disteff)*(disteff)*(disteff)*(disteff)-0.00006550491191697*(disteff)*(disteff)*(disteff)+0.020181800970007*(disteff)*(disteff)+2.20983621768921*(disteff))/cote
-     proposition.append(f"Plan nutritionnel pour ton trail de {distance} kms et {deniv} m de dénivelé, avec une cote de {cote},")
-else:
-     st.write("Entre ton temps de course estimé 👇")
-     tpsh=st.number_input("Heures", min_value=0)
-     tpsm=st.number_input("Minutes", min_value=0, max_value=59)
-     tpsestime=(tpsh*60)+tpsm
-     cote=700
-     proposition.append(f"Plan nutritionnel pour ta course de {distance} kms,")
 tpsestimeh=tpsestime/60
-st.write('➜Temps de course estimé:', int(tpsestime), 'minutes, soit', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
-proposition.append(f"pour un temps estimé de {int(tpsestime)} minutes, soit {int(tpsestimeh)}h {int((tpsestimeh % 1) * 60)} min :")
+st.write('➜Temps de course estimé:', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
+proposition.append(f"pour un temps total estimé de {int(tpsestimeh)}h{int((tpsestimeh % 1) * 60)}min :")
 
 objectif=st.radio("Choisi ton objectif 👇", ["Performance", "Plaisir", "Finisher"], horizontal=True)
 if objectif=="Performance" and tpsestimeh<1:
