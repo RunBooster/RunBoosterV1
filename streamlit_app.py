@@ -657,7 +657,7 @@ if st.button("Envoyer mon Plan Nutritionnel"):
               st.write(ligne)
          st.markdown("### Conseils nutritionnels 🥤🍌\n")
          st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
-     if email:
+    if email:
           if plan:  # Vérification que le plan n'est pas vide
                contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
                fichier_pdf = generer_pdf(contenu_plan)
@@ -665,5 +665,5 @@ if st.button("Envoyer mon Plan Nutritionnel"):
                os.remove(fichier_pdf)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
-     else:
+    else:
           st.warning("❌ Veuillez entrer une adresse email valide.")  
