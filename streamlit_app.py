@@ -32,7 +32,7 @@ eau=500
 
 proposition = []
 
-race = st.selectbox("Choisi ta course 👇", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
+race = st.selectbox("Choisis ta course 👇", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
 if race == "Autre":
     distance = st.number_input("Entre la distance de ta course en km", format="%0.1f")
     deniv = st.number_input("Entre le dénivelé positif en m", format="%0f")
@@ -92,7 +92,7 @@ tpsestimeh=tpsestime/60
 st.write('➜Temps de course estimé:', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
 proposition.append(f"pour un temps total estimé de {int(tpsestimeh)}h{int((tpsestimeh % 1) * 60)}min :")
 
-objectif=st.radio("Choisi ton objectif 👇", ["Performance", "Plaisir", "Finisher"], horizontal=True)
+objectif=st.radio("Choisis ton objectif 👇", ["Performance", "Plaisir", "Finisher"], horizontal=True)
 if objectif=="Performance" and tpsestimeh<1:
         cas=1
         Cho=0
@@ -561,9 +561,9 @@ conseils = [
         "Ton dernier repas avant la course doit être pris au moins 3h avant le départ, et être assez léger,",
         "ce n’est plus le moment de se surcharger le ventre.",
         "   ",
-        "+Hydrate toi dès les premières minutes de course.",
-        "+Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), ils n'ont pas d'intérêt et",
-        "alourdirons ton estomac.",
+        "+Hydrate-toi dès les premières minutes de course.",
+        "+Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), elles n'ont pas d'intérêt et",
+        "alourdiront ton estomac.",
         "+En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
         "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
         "Se réserver le droit de prendre un gel caféiné en cas de coup de mou.",
@@ -571,7 +571,7 @@ conseils = [
         "++Ne dépasse pas 400mg de caféine dans la journée.",
         "++Boire plus de 800mL d'eau par heure peut être dangereux.",
         "++Pour les allergies, notre comparatif doit être revérifié, ne prenez pas nos informations à la lettre.",
-        "+Si plus de 70g de glucides sont consommés par heure, entraîne ton intestin à l'entraînement (Gut training).",
+        "+Si plus de 70g de glucides sont consommés par heure, habitue ton intestin à l'entraînement (Gut training).",
         "+Teste les différents produits avant le jour J.",
         "+La consultation d'un professionnel de santé est conseillée en cas de doute."
 ]
