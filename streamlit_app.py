@@ -10,6 +10,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import json
+from google.oauth2 import service_account
 
 produits = "produits.xlsx"  
 df = pd.read_excel(produits, sheet_name="Produits énergétiques", engine="openpyxl")
