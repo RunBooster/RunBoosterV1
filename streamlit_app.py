@@ -6,6 +6,10 @@ import numpy as np
 from fpdf import FPDF
 import os
 from email.message import EmailMessage
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import json
 
 produits = "produits.xlsx"  
 df = pd.read_excel(produits, sheet_name="Produits énergétiques", engine="openpyxl")
