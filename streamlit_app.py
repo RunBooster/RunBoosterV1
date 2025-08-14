@@ -671,7 +671,7 @@ nom = st.text_input("Prénom")
 email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster")
 
 if st.button("Envoyer mon Plan Nutritionnel"):
-enregistrer_utilisateur_google_sheet(prenom, email, marques, cote, objectif)
+    enregistrer_utilisateur_google_sheet(prenom, email, marques, cote, objectif)
 # Affichage du plan nutritionnel
     if plan:
          st.write("### Plan nutritionnel généré :")
