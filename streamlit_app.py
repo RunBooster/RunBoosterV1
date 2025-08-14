@@ -644,10 +644,10 @@ if not selection and not (filtrer_densite | filtrer_prix | filtrer_prix2) and tp
           
 
 
-nom = st.text_input("Prénom (facultatif)")
-email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster en cliquant sur le bouton 'Recevoir' (facultatif)")
+nom = st.text_input("Prénom")
+email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster")
 
-if st.button("Créer mon Plan Nutritionnel"):
+if st.button("Envoyer mon Plan Nutritionnel"):
 # Affichage du plan nutritionnel
     if plan:
          st.write("### Plan nutritionnel généré :")
@@ -655,26 +655,15 @@ if st.button("Créer mon Plan Nutritionnel"):
               st.write(ligne)
          for ligne in plan:
               st.write(ligne)
-              
          st.markdown("### Conseils nutritionnels 🥤🍌\n")
          st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
-
-
-
-if st.button("Recevoir mon Plan par Email"):
      if email:
           if plan:  # Vérification que le plan n'est pas vide
                contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
-
-                 # Générer le PDF
                fichier_pdf = generer_pdf(contenu_plan)
-
-                 # Envoyer l'email
                envoyer_email(email, fichier_pdf)
-
-                 # Supprimer le fichier après envoi
                os.remove(fichier_pdf)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
      else:
-          st.warning("❌ Veuillez entrer une adresse email valide.")
+          st.warning("❌ Veuillez entrer une adresse email valide.")  
