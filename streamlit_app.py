@@ -576,7 +576,26 @@ conseils = [
 ]
 
 
-
+def enregistrer_utilisateur_google_sheet(prenom, email, marques, cote, objectif):
+    # Accès à l'API Google Sheets
+    scope = ["https://spreadsheets.google.com/feeds",
+             "https://www.googleapis.com/auth/drive"]
+    creds_dict = st.secrets["google_service_account"]
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(dict(creds_dict), scope)
+    client = gspread.authorize(creds)
+    # Ouvre la feuille
+    sheet = client.open_by_key("1yjGcVDEkdP_eSo44g3xg1nO7hMFCZYLj93rohzktODY").sheet1
+    # Ajouter une ligne
+    marques_str = ", ".join(marques) if isinstance(marques, list) else str(marques)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data = [now, prenom, email, marques_str, cote, objectif]
+    sheet.append_row(data)
+    try:
+        sheet.append_row(data)
+        print("✅")
+    except Exception as e:
+        print(f"❌ Erreur lors de l'enregistrement : {e}")
+        
 def generer_pdf(contenu):
     pdf = FPDF()
     pdf.add_page()
@@ -652,6 +671,7 @@ nom = st.text_input("Prénom")
 email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster")
 
 if st.button("Envoyer mon Plan Nutritionnel"):
+enregistrer_utilisateur_google_sheet(prenom, email, marques, cote, objectif)
 # Affichage du plan nutritionnel
     if plan:
          st.write("### Plan nutritionnel généré :")
