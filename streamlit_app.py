@@ -603,10 +603,10 @@ def envoyer_email(destinataire, nom, distance, proposition, plan, conseils):
         
         <h3>🏁 Plan nutritionnel généré :</h3>
         <ul>
-            {''.join([f"{ligne}" for ligne in proposition])}
+            {''.join([f"<div>{ligne}</div>" for ligne in proposition])}
         </ul>
         <ul>
-            {''.join([f"{ligne}" for ligne in plan])}
+            {''.join([f"<div>{ligne}</div>" for ligne in plan])}
         </ul>
 
         <h3>🍌 Conseils nutritionnels :</h3>
