@@ -627,7 +627,7 @@ def generer_pdf(contenu):
     return pdf_filename
 
 # === Fonction d'envoi d'email ===
-def envoyer_email(destinataire, fichier_pdf):
+def envoyer_email(destinataire, fichier_pdf, , nom, distance, proposition, plan, conseils):
     expediteur = "plan.runbooster@gmail.com"
     mot_de_passe = "zxkt evcb usww bgyt"  # Utiliser une variable d'environnement !
 
@@ -639,7 +639,7 @@ def envoyer_email(destinataire, fichier_pdf):
     texte_html = f"""
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-        <p>Bonjour <b>{prenom}</b>,</p>
+        <p>Bonjour <b>{nom}</b>,</p>
         <p>Tu trouveras ton plan nutritionnel pour ta course de <b>{distance} kms</b> :</p>
         
         <h3>🏁 Plan nutritionnel généré :</h3>
@@ -708,7 +708,7 @@ if st.button("Envoyer mon Plan Nutritionnel"):
           if plan:  # Vérification que le plan n'est pas vide
                contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
                fichier_pdf = generer_pdf(contenu_plan)
-               envoyer_email(email, fichier_pdf)
+               envoyer_email(email, fichier_pdf, nom, distance, proposition, plan, conseils)
                os.remove(fichier_pdf)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
