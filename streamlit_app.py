@@ -636,6 +636,32 @@ def envoyer_email(destinataire, fichier_pdf):
     msg["From"] = expediteur
     msg["To"] = destinataire
     msg.set_content(f"Bonjour {nom},\n\nTu trouveras ci-joint ton plan nutritionnel en PDF pour ta course de {distance} kilomètres.\n\nBonne course!")
+    texte_html = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+        <p>Bonjour <b>{prenom}</b>,</p>
+        <p>Tu trouveras ton plan nutritionnel pour ta course de <b>{distance} kms</b> :</p>
+        
+        <h3>🏁 Plan nutritionnel généré :</h3>
+        <ul>
+            {''.join([f"<li>{ligne}</li>" for ligne in proposition])}
+        </ul>
+        <ul>
+            {''.join([f"<li>{ligne}</li>" for ligne in plan])}
+        </ul>
+
+        <h3>🍌 Conseils nutritionnels :</h3>
+        <ul>
+            {''.join([f"<li>{ligne.strip('+')}" if ligne.strip().startswith('+') else f"<li>{ligne}</li>" for ligne in conseils])}
+        </ul>
+
+        <p>Besoin de ré-essayer? <a href="https://baouw-utmb.streamlit.app/">Clique ici</a></p>
+        <p>Bonne course ! 🚀</p>
+        <p>L'équipe RunBooster et Baouw</p>
+    </body>
+    </html>
+    """
+    msg.add_alternative(texte_html, subtype="html")
 
     # Ajouter le PDF en pièce jointe
     with open(fichier_pdf, "rb") as f:
