@@ -627,7 +627,7 @@ def generer_pdf(contenu):
     return pdf_filename
 
 # === Fonction d'envoi d'email ===
-def envoyer_email(destinataire, fichier_pdf, , nom, distance, proposition, plan, conseils):
+def envoyer_email(destinataire, fichier_pdf, nom, distance, proposition, plan, conseils):
     expediteur = "plan.runbooster@gmail.com"
     mot_de_passe = "zxkt evcb usww bgyt"  # Utiliser une variable d'environnement !
 
