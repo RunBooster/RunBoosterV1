@@ -553,17 +553,11 @@ elif cas in [3, 4, 5, 6, 7]:
 
     # Conseils ajoutés
 conseils = [
-        "+Pour la boisson, tu peux regrouper la quantité de deux heures dans une seule gourde, la 2e gourde étant",
-        "consacrée à l'eau pour se rincer la bouche.",
-        "+Tu peux commencer par augmenter ta quantité de glucides ingérée les 3 jours avant la course, pour faire",
-        "tes stocks de glycogène musculaire (énergie), en mangeant un peu plus de féculents (riz, pâtes, patates, pain,…),",
-        "et en réduisant les fibres (légumes crus, céréales complètes, légumineuses,…) ainsi que les graisses.",
-        "Ton dernier repas avant la course doit être pris au moins 3h avant le départ, et être assez léger,",
-        "ce n’est plus le moment de se surcharger le ventre.",
-        "   ",
+        "+Pour la boisson, tu peux regrouper la quantité de deux heures dans une seule gourde, la 2e gourde étant consacrée à l'eau pour se rincer la bouche.",
+        "+Tu peux commencer par augmenter ta quantité de glucides ingérée les 3 jours avant la course, pour faire tes stocks de glycogène musculaire (énergie), en mangeant un peu plus de féculents (riz, pâtes, patates, pain,…), et en réduisant les fibres (légumes crus, céréales complètes, légumineuses,…) ainsi que les graisses.",
+        "+Ton dernier repas avant la course doit être pris au moins 3h avant le départ, et être assez léger, ce n’est plus le moment de se surcharger le ventre.",
         "+Hydrate-toi dès les premières minutes de course.",
-        "+Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), elles n'ont pas d'intérêt et",
-        "alourdiront ton estomac.",
+        "+Evite les graisses saturées au ravitaillement (fromage, charcuterie,...), elles n'ont pas d'intérêt et alourdiront ton estomac.",
         "+En trail, évite les aliments solides à l'entame d'une descente et prends plutôt un aliment liquide.",
         "Privilégie les aliments solides en fin de descente ou début de montée pour ne pas avoir de troubles digestifs.",
         "Se réserver le droit de prendre un gel caféiné en cas de coup de mou.",
@@ -635,7 +629,6 @@ def envoyer_email(destinataire, fichier_pdf, nom, distance, proposition, plan, c
     msg["Subject"] = "Ton Plan Nutritionnel de course 📄"
     msg["From"] = expediteur
     msg["To"] = destinataire
-    msg.set_content(f"Bonjour {nom},\n\nTu trouveras ci-joint ton plan nutritionnel en PDF pour ta course de {distance} kilomètres.\n\nBonne course!")
     texte_html = f"""
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
@@ -655,7 +648,7 @@ def envoyer_email(destinataire, fichier_pdf, nom, distance, proposition, plan, c
             {''.join([f"<li>{ligne.strip('+')}" if ligne.strip().startswith('+') else f"<li>{ligne}</li>" for ligne in conseils])}
         </ul>
 
-        <p>Besoin de ré-essayer? <a href="https://baouw-utmb.streamlit.app/">Clique ici</a></p>
+        <p>Besoin de ré-essayer? <a href="https://www.run-booster.com/plan-nutritionnel">Clique ici</a></p>
         <p>Bonne course ! 🚀</p>
         <p>L'équipe RunBooster et Baouw</p>
     </body>
