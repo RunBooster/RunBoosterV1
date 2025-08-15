@@ -161,7 +161,7 @@ if temp and tpsestimeh>=2:
             eau=700
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
-        proposition.append('➜Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.')
+        proposition.append('(Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.)')
 
 # Liste des marques uniques 
 marques = sorted(df["Marque"].dropna().unique().tolist(), key=str)
@@ -255,9 +255,9 @@ if filtrer_prix2:
     criteres_selectionnes.append("Les moins chers")
 if filtrer_densite:
     criteres_selectionnes.append("Densité énergétique maximale")
-proposition.append(f"--> Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
+proposition.append(f"➜ Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
 if "Baouw" in selection:
-    proposition.append(f"--> Obtiens 15% de réduction sur tout le site Baouw avec le code RUNBOOSTER15 ")
+    proposition.append(f"➜ Obtiens 15% de réduction sur tout le site Baouw avec le code RUNBOOSTER15 ")
 # Filtrage par marque
 if selection:
     df_filtre = df[df["Marque"].isin(selection)]
@@ -587,43 +587,9 @@ def enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif):
     data = [now, nom, email, marques_str, cote, objectif]
     sheet.append_row(data)
         
-def generer_pdf(contenu):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", style="B", size=14)
-
-    # Titre du PDF
-    pdf.cell(200, 10, "Résumé de ton Plan Nutritionnel", ln=True, align='C')
-    pdf.ln(10)
-
-    # Ajout du contenu en forçant l'encodage UTF-8
-    pdf.set_font("Arial", size=11)
-    for ligne in proposition:
-        pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
-    pdf.set_font("Arial", size=14)
-    for ligne in plan:
-        if ligne:
-            try:
-                pdf.multi_cell(0, 10, ligne.encode("latin-1", "ignore").decode("latin-1"))
-            except Exception as e:
-                print(f"Erreur d'encodage : {e}, ligne ignorée: {ligne}")
-         # Séparation
-    pdf.ln(10)
-    pdf.set_font("Arial", style="B", size=12)
-    pdf.cell(200, 10, "Conseils nutrition & sécurité", ln=True)
-    pdf.set_font("Arial", size=11)
-    for conseil in conseils:
-        pdf.multi_cell(0, 8, conseil.encode("latin-1", "ignore").decode("latin-1"))
-
-    # Sauvegarde du PDF
-    pdf_filename = "plan_nutritionnel.pdf"
-    pdf.output(pdf_filename)
-    return pdf_filename
-
-# === Fonction d'envoi d'email ===
-def envoyer_email(destinataire, fichier_pdf, nom, distance, proposition, plan, conseils):
+def envoyer_email(destinataire, nom, distance, proposition, plan, conseils):
     expediteur = "plan.runbooster@gmail.com"
-    mot_de_passe = "zxkt evcb usww bgyt"  # Utiliser une variable d'environnement !
+    mot_de_passe = "zxkt evcb usww bgyt"  
 
     msg = EmailMessage()
     msg["Subject"] = "Ton Plan Nutritionnel de course 📄"
@@ -650,17 +616,12 @@ def envoyer_email(destinataire, fichier_pdf, nom, distance, proposition, plan, c
 
         <p>Besoin de ré-essayer? <a href="https://www.run-booster.com/plan-nutritionnel">Clique ici</a></p>
         <p>Bonne course ! 🚀</p>
-        <p>L'équipe RunBooster et Baouw</p>
+        <p>L'équipe RunBooster</p>
     </body>
     </html>
     """
     msg.add_alternative(texte_html, subtype="html")
 
-    # Ajouter le PDF en pièce jointe
-    with open(fichier_pdf, "rb") as f:
-        msg.add_attachment(f.read(), maintype="application", subtype="pdf", filename=fichier_pdf)
-
-    # Envoi via SMTP
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
             serveur.login(expediteur, mot_de_passe)
@@ -680,8 +641,6 @@ if not selection and not (filtrer_densite | filtrer_prix | filtrer_prix2) and tp
           "+Naak pour ses engagements", 
           "+Ergysport, Authentic Nutrition, CooknRun, Atlet Nutrition, Meltonic, Gourmiz pour leurs valeurs et leur origine."]
      st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in RecoMarque]))
-          
-
 
 nom = st.text_input("Prénom")
 email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster")
@@ -699,10 +658,8 @@ if st.button("Envoyer mon Plan Nutritionnel"):
          st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
     if email:
           if plan:  # Vérification que le plan n'est pas vide
-               contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
-               fichier_pdf = generer_pdf(contenu_plan)
-               envoyer_email(email, fichier_pdf, nom, distance, proposition, plan, conseils)
-               os.remove(fichier_pdf)
+               #contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
+               envoyer_email(email, nom, distance, proposition, plan, conseils)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
     else:
