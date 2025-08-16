@@ -3,7 +3,6 @@ import pandas as pd
 import random
 import smtplib
 import numpy as np
-from fpdf import FPDF
 import os
 from email.message import EmailMessage
 import gspread
@@ -256,8 +255,11 @@ if filtrer_prix2:
 if filtrer_densite:
     criteres_selectionnes.append("Densité énergétique maximale")
 proposition.append(f"➜ Tu veux utiliser les marques suivantes: {', '.join(selection)} avec les critères suivants:{', '.join(criteres_selectionnes)}.")
+
+##Offres partenaires
 if "Baouw" in selection:
-    proposition.append(f"➜ Obtiens 15% de réduction sur tout le site Baouw avec le code RUNBOOSTER15 ")
+    proposition.append(f"🎁 Obtiens 15% de réduction sur tout le site Baouw avec le code RUNBOOSTER15 ")
+    
 # Filtrage par marque
 if selection:
     df_filtre = df[df["Marque"].isin(selection)]
