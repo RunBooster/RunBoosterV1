@@ -92,7 +92,7 @@ elif race == "ETC":
     distance = 15
     tpsestime=-0.0000010535438858*(cote)*(cote)*(cote)+0.0023650968191*(cote)*(cote)-1.8805758670806*(cote)+622.66999220336
 temp=st.checkbox("Cocher si plus de 20°C annoncés")
-if temp:
+if temp and (race != "Autre" or valid_index):
     tpsestime=tpsestime*1.03
 tpsestimeh=tpsestime/60
 st.write('➜Temps de course estimé:', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
@@ -160,11 +160,7 @@ Chotot=Cho*tpsestimeh
 proposition.append(f"➜Tu consommeras {Cho}g de glucides par heure, soit {int(Chotot)} grammes de glucides sur la course.")
 
 st.divider()
-if temp and tpsestimeh>=2:
-        #st.write('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium')
-        proposition.append('➜Tu ajouteras un peu de sel de table dans ta gourde, pour un apport de Sodium total de 400mg par heure de course (1g de sel de table=400mg de Sodium), pour compenser tes pertes en sodium.')
-        if tpsestimeh>=3:
-            eau=700
+            
 if objectif=="Performance" and tpsestimeh>=5:
         #st.write('➜Tu peux ajouter dans ta gourde, 3g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse')
         proposition.append('(Option facultative: tu peux ajouter dans ta gourde, 2g de BCAA 2.1.1 par heure de course, pour limiter les fatigues musculaire et nerveuse.)')
@@ -515,8 +511,9 @@ elif cas in [3, 4, 5, 6, 7]:
         
         #gestion sodium
         if temp and heure not in hnosodium and sodiumheureavant < 0.5:
+            eau=700
             ajoutsod=0
-            if sodium_tot < 0.5 and heure > 1: 
+            if sodium_tot < 0.5 and heure > 2: 
                 ajoutsod=1-sodiumheureavant-sodium_tot
             elif sodium_tot < 0.5:
                 ajoutsod=0.5-sodium_tot
@@ -528,6 +525,7 @@ elif cas in [3, 4, 5, 6, 7]:
         else:
             plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
         sodiumheureavant=sodium_tot
+        eau=500
 
     if derniere_heure > 0:
         eau=derniere_heure*eau
