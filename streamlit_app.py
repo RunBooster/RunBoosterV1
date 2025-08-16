@@ -519,9 +519,8 @@ elif cas in [3, 4, 5, 6, 7]:
                 ajoutsod=0.5-sodium_tot
             else:
                 ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
-            sodium_totnew=ajoutsod+sodium_tot
-            ajoutsel=(sodium_totnew-sodium_tot)*2.5
-            sodium_tot=sodium_totnew
+            sodium_tot+=ajoutsod
+            ajoutsel=ajoutsod*2.5
             plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
         else:
             plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
