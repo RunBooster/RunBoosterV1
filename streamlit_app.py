@@ -322,7 +322,7 @@ if filtrer_produits:
          df=df_selectionproduits
     selection_valide = False
     while not selection_valide:
-        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS"])].empty and not df_selectionproduits[df_selectionproduits["Ref"].isin(["B"])].empty:
+        if not df_selectionproduits[df_selectionproduits["Ref"].isin(["C", "BA", "BAS", "CS", "G"])].empty and not df_selectionproduits[df_selectionproduits["Ref"].isin(["B"])].empty:
             selection_valide = True
         else:
             st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre et une Boisson")
@@ -524,7 +524,7 @@ elif cas in [3, 4, 5, 6, 7]:
                     ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
             sodium_tot+=ajoutsod 
             ajoutsel=ajoutsod*2.5
-            if ajoutsod > 0.0
+            if ajoutsod > 0.0:
                 plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
             else:
                 plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
