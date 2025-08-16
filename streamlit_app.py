@@ -510,14 +510,14 @@ elif cas in [3, 4, 5, 6, 7]:
         caf_tot+=produit_1.Caf*x_1
         
         #gestion sodium
-        if temp and heure not in hnosodium and sodiumheureavant < 0.5:
+        if temp and heure not in hnosodium:
             eau=700
             ajoutsod=0
-            if sodium_tot < 0.5 and heure > 2: 
+            if sodiumheureavant < 0.5 and sodium_tot < 0.5 and heure > 2: 
                 ajoutsod=1-sodiumheureavant-sodium_tot
-            elif sodium_tot < 0.5:
+            elif sodiumheureavant < 0.5 and sodium_tot < 0.5:
                 ajoutsod=0.5-sodium_tot
-            else:
+            elif sodiumheureavant < 0.5:
                 if sodium_tot > 1-sodiumheureavant:
                     ajoutsod=0
                 else:
