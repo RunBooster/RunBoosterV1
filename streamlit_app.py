@@ -10,6 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import json
 from google.oauth2 import service_account
+from collections import Counter
 
 produits = "produits.xlsx"  
 df = pd.read_excel(produits, sheet_name="Produits énergétiques", engine="openpyxl")
@@ -28,7 +29,8 @@ df = load_data()
 df = df[~((df['Ref'] == 'B') & (df['Masse'] == 1) & (df['Sodium'] > 0.0125))] #on enlève les boissons en pot trop riches en sodium
 df = df[~((df["Ref"] == 'B') & (df["Caf"] != 0))]
 eau=500
-
+hnosodium=[]
+sodiumheureavant=0
 proposition = []
 
 race = st.selectbox("Choisis ta course 👇", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
@@ -56,6 +58,7 @@ elif race == "UTMB":
     st.write('⌛ Temps de passage estimé à Courmayeur:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ton {race},")
     proposition.append(f"avec un temps de passage estimé à Courmayeur de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min,")
+    hnosodium=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,26,27,28,29,30,31,32,33,34,35,36,37,38]
 elif race == "CCC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 99
@@ -65,6 +68,7 @@ elif race == "CCC":
     st.write('⌛ Temps de passage estimé à Champex Lac:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ta {race},")
     proposition.append(f"avec un temps de passage estimé à Champex Lac de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
+    hnosodium=[11,12,13,14,15,16,17,18,19,20,21,22,23]
 elif race == "OCC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 58
@@ -78,6 +82,7 @@ elif race == "TDS":
     st.write('⌛ Temps de passage estimé à Beaufort:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ta {race},")
     proposition.append(f"avec un temps de passage estimé à Beaufort de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
+    hnosodium=[0,1,2,3,4,5,6,7,8,20,21,22,23,24,25,26,27,28,29,30,31,32]
 elif race == "MCC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 38.5
@@ -86,7 +91,9 @@ elif race == "ETC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 15
     tpsestime=-0.0000010535438858*(cote)*(cote)*(cote)+0.0023650968191*(cote)*(cote)-1.8805758670806*(cote)+622.66999220336
-
+temp=st.checkbox("Cocher si plus de 20°C annoncés")
+if temp:
+    tpsestime=tpsestime*1.03
 tpsestimeh=tpsestime/60
 st.write('➜Temps de course estimé:', int(tpsestimeh), 'h', int((tpsestimeh%1)*60), 'min' )
 proposition.append(f"pour un temps total estimé de {int(tpsestimeh)}h{int((tpsestimeh % 1) * 60)}min :")
@@ -151,7 +158,7 @@ st.write("Tu consommeras", (Cho), "g de glucides par heure de course")
 Chotot=Cho*tpsestimeh
 #st.write('➜Tu consommeras', Cho,'g de glucides par heure, soit', int(Chotot), 'grammes de glucides sur la course')
 proposition.append(f"➜Tu consommeras {Cho}g de glucides par heure, soit {int(Chotot)} grammes de glucides sur la course.")
-temp=st.checkbox("Cocher si plus de 20°C annoncés")
+
 st.divider()
 if temp and tpsestimeh>=2:
         #st.write('➜Tu ajouteras dans ta gourde, 1g de sel de table par heure de course, pour compenser tes pertes en sodium')
@@ -505,7 +512,21 @@ elif cas in [3, 4, 5, 6, 7]:
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1
         caf_tot+=produit_1.Caf*x_1
-        plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
+        
+        #gestion sodium
+        if temp and heure not in hnosodium and sodiumheureavant < 0.5:
+            ajoutsod=0
+            if sodium_tot < 0.5 and heure > 1: 
+                ajoutsod=1-sodiumheureavant-sodium_tot
+            elif sodium_tot < 0.5:
+                ajoutsod=0.5-sodium_tot
+            else:
+                ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
+            ajoutsel=ajoutsod*2.5
+            sodium_tot+=ajoutsod
+            plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
+        else:
+            plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
 
     if derniere_heure > 0:
         eau=derniere_heure*eau
