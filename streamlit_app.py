@@ -518,10 +518,16 @@ elif cas in [3, 4, 5, 6, 7]:
             elif sodium_tot < 0.5:
                 ajoutsod=0.5-sodium_tot
             else:
-                ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
-            sodium_tot+=ajoutsod
+                if sodium_tot > 1-sodiumheureavant:
+                    ajoutsod=0
+                else:
+                    ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
+            sodium_tot+=ajoutsod 
             ajoutsel=ajoutsod*2.5
-            plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
+            if ajoutsod > 0.0
+                plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
+            else:
+                plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
         else:
             plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']}  {', '.join(produits_text)}.")
         sodiumheureavant=sodium_tot
