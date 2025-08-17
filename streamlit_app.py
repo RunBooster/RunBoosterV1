@@ -648,7 +648,7 @@ def envoyer_email(destinataire, nom, distance, proposition, plan, resume_text, c
             {''.join([f"<li>{ligne.strip('+')}" if ligne.strip().startswith('+') else f"<li>{ligne}</li>" for ligne in conseils])}
         </ul>
 
-        <h3>🧾 To take :</h3>
+        <h3>🧾 A prendre :</h3>
         <ul>
             {''.join([f"<li>{ligne}</li>" for ligne in resume_text])}
         </ul>
@@ -688,27 +688,20 @@ if st.button("Envoyer mon Plan Nutritionnel"):
     enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif)
     resume_text = []
     for nom, count in compteur_produits.items():
-        if unite == "sachet":
-            total = round(count) if count % 1 == 0 else round(count, 1)
-            resume_text.append(f"{total} sachets de {nom}")
-        elif nom == "Sel de table" or unite == "g":
-            total = round(count) if count % 1 == 0 else round(count, 1)
-            resume_text.append(f"{total}g de {nom}")
-        else:
-            total = round(count) if count % 1 == 0 else round(count, 1)
-            resume_text.append(f"{total} × {nom}")
+        total = round(count) if count % 1 == 0 else round(count, 1)
+        resume_text.append(f"{total} × {nom}")
             
 # Affichage du plan nutritionnel
     if plan:
-         st.write("### Plan nutritionnel généré :")
+         st.write("### 🏁 Plan nutritionnel généré :")
          for ligne in proposition:
               st.write(ligne)
          for ligne in plan:
               st.write(ligne)
-         st.markdown("### Conseils nutritionnels 🥤🍌\n")
+         st.markdown("### 🍌 Conseils nutritionnels \n")
          st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
     if resume_text:
-        st.markdown("### A prendre 🥤🍌\n")
+        st.markdown("### 🧾 A prendre \n")
         for ligne in resume_text:
             st.write(ligne)
         
