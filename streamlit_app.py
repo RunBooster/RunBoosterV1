@@ -605,7 +605,7 @@ conseils = [
 ]
 
 
-def enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif):
+def enregistrer_utilisateur_google_sheet(prenom, email, selection, cote, objectif):
     # Accès à l'API Google Sheets
     scope = ["https://spreadsheets.google.com/feeds",
              "https://www.googleapis.com/auth/drive"]
@@ -618,10 +618,10 @@ def enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif):
         marques_str = ", ".join(selection)
     else:
         marques_str = str(selection)
-    data = [now, nom, email, marques_str, cote, objectif]
+    data = [now, prenom, email, marques_str, cote, objectif]
     sheet.append_row(data)
         
-def envoyer_email(destinataire, nom, distance, proposition, plan, resume_text, conseils):
+def envoyer_email(destinataire, prenom, distance, proposition, plan, resume_text, conseils):
     expediteur = "plan.runbooster@gmail.com"
     mot_de_passe = "zxkt evcb usww bgyt"  
 
@@ -632,7 +632,7 @@ def envoyer_email(destinataire, nom, distance, proposition, plan, resume_text, c
     texte_html = f"""
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
-        <p>Bonjour <b>{nom}</b>,</p>
+        <p>Bonjour <b>{prenom}</b>,</p>
         <p>Tu trouveras ton plan nutritionnel pour ta course de <b>{distance} kms</b> :</p>
         
         <h3>🏁 Plan nutritionnel généré :</h3>
@@ -681,11 +681,11 @@ if not selection and not (filtrer_densite | filtrer_prix | filtrer_prix2) and tp
           "+Ergysport, Authentic Nutrition, CooknRun, Atlet Nutrition, Meltonic, Gourmiz pour leurs valeurs et leur origine."]
      st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in RecoMarque]))
 
-nom = st.text_input("Prénom")
+prenom = st.text_input("Prénom")
 email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et les actus RunBooster")
 
 if st.button("Envoyer mon Plan Nutritionnel"):
-    enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif)
+    enregistrer_utilisateur_google_sheet(prenom, email, selection, cote, objectif)
     resume_text = []
     for nom, count in compteur_produits.items():
         if nom == "Sel de table" or count>50:
@@ -711,7 +711,7 @@ if st.button("Envoyer mon Plan Nutritionnel"):
     if email:
           if plan:  # Vérification que le plan n'est pas vide
                #contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
-               envoyer_email(email, nom, distance, proposition, plan, resume_text, conseils)
+               envoyer_email(email, prenom, distance, proposition, plan, resume_text, conseils)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
     else:
