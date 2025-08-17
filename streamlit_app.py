@@ -688,9 +688,12 @@ if st.button("Envoyer mon Plan Nutritionnel"):
     enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif)
     resume_text = []
     for nom, count in compteur_produits.items():
-        total = round(count) if count % 1 == 0 else round(count, 1)
-        resume_text.append(f"{total} × {nom}")
-            
+        if nom == "Sel de table" or count>50:
+            total = round(count) if count % 1 == 0 else round(count, 1)
+            resume_text.append(f"{total}g de {nom}")
+        else:
+            total = round(count) if count % 1 == 0 else round(count, 1)
+            resume_text.append(f"{total} × {nom}")
 # Affichage du plan nutritionnel
     if plan:
          st.write("### 🏁 Plan nutritionnel généré :")
