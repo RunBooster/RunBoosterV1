@@ -11,6 +11,7 @@ from datetime import datetime
 import json
 from google.oauth2 import service_account
 from collections import Counter
+compteur_produits = Counter()
 
 produits = "produits.xlsx"  
 df = pd.read_excel(produits, sheet_name="Produits énergétiques", engine="openpyxl")
@@ -493,6 +494,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 break
             if produit.Glucide <= glucide_restant+10:
                 produits_text.append(f"+ 1 {produit.Nom} de la marque {produit.Marque}")
+                compteur_produits[produit.Nom] += 1
                 glucide_restant -= produit.Glucide
                 glucide_tot+=produit.Glucide
                 sodium_tot+=produit.Sodium
@@ -508,6 +510,7 @@ elif cas in [3, 4, 5, 6, 7]:
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1
         caf_tot+=produit_1.Caf*x_1
+        compteur_produits[produit_1.Nom] += x_1
         
         #gestion sodium
         if temp and heure not in hnosodium:
@@ -524,6 +527,7 @@ elif cas in [3, 4, 5, 6, 7]:
                     ajoutsod=0.5-sodiumheureavant+(0.5-sodium_tot)
             sodium_tot+=ajoutsod 
             ajoutsel=ajoutsod*2.5
+            compteur_produits["Sel de table"] = compteur_produits.get("Sel de table", 0) + ajoutsel
             if ajoutsod > 0.0:
                 plan.append(f"🕐 Heure {heure} (Glucides: {int(glucide_tot)}g, Sodium: {int(sodium_tot*1000)}mg, Caféine: {int(caf_tot)}mg): {x_1} {unite} dans {eau}mL d'eau de {produit_1['Nom']} de la marque {produit_1['Marque']} avec {ajoutsel:.2f}g de sel de table {', '.join(produits_text)}.")
             else:
@@ -544,6 +548,7 @@ elif cas in [3, 4, 5, 6, 7]:
             produit_1 = df[df["Ref"] == "B"].sample(1).iloc[0]
         glucide_1 = produit_1["Glucide"]
         x_1, unite = ajuster_x(glucide_1, 30 * derniere_heure, 40 * derniere_heure)
+        compteur_produits[produit_1.Nom] += x_1
         glucide_tot+=produit_1.Glucide*x_1
         sodium_tot+=produit_1.Sodium*x_1
         caf_tot+=produit_1.Caf*x_1
@@ -569,6 +574,7 @@ elif cas in [3, 4, 5, 6, 7]:
                 break
             if produit.Glucide <= glucide_restant:
                 produits_text.append(f"+ 1 {produit.Nom} de la marque {produit.Marque}")
+                compteur_produits[produit.Nom] += 1
                 glucide_restant -= produit.Glucide
                 glucide_tot+=produit.Glucide
                 sodium_tot+=produit.Sodium*1000
@@ -615,7 +621,7 @@ def enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif):
     data = [now, nom, email, marques_str, cote, objectif]
     sheet.append_row(data)
         
-def envoyer_email(destinataire, nom, distance, proposition, plan, conseils):
+def envoyer_email(destinataire, nom, distance, proposition, plan, resume_text, conseils):
     expediteur = "plan.runbooster@gmail.com"
     mot_de_passe = "zxkt evcb usww bgyt"  
 
@@ -640,6 +646,11 @@ def envoyer_email(destinataire, nom, distance, proposition, plan, conseils):
         <h3>🍌 Conseils nutritionnels :</h3>
         <ul>
             {''.join([f"<li>{ligne.strip('+')}" if ligne.strip().startswith('+') else f"<li>{ligne}</li>" for ligne in conseils])}
+        </ul>
+
+        <h3>🧾 To take :</h3>
+        <ul>
+            {''.join([f"<li>{ligne}</li>" for ligne in resume_text])}
         </ul>
 
         <p>Besoin de ré-essayer? <a href="https://www.run-booster.com/plan-nutritionnel">Clique ici</a></p>
@@ -675,6 +686,19 @@ email = st.text_input("Votre adresse e-mail pour recevoir un récapitulatif et l
 
 if st.button("Envoyer mon Plan Nutritionnel"):
     enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif)
+    resume_text = []
+    for nom, count in compteur_produits.items():
+        glucide_unitaire = glucides_par_nom.get(nom, 0)
+        if unite == "sachet":
+            total = round(count) if count % 1 == 0 else round(count, 1)
+            resume_text.append(f"{total} sachets de {nom}")
+        elif nom == "Sel de table" or unite == "g":
+            total = round(count) if count % 1 == 0 else round(count, 1)
+            resume_text.append(f"{total}g de {nom}")
+        else:
+            total = round(count) if count % 1 == 0 else round(count, 1)
+            resume_text.append(f"{total} × {nom}")
+            
 # Affichage du plan nutritionnel
     if plan:
          st.write("### Plan nutritionnel généré :")
@@ -684,10 +708,15 @@ if st.button("Envoyer mon Plan Nutritionnel"):
               st.write(ligne)
          st.markdown("### Conseils nutritionnels 🥤🍌\n")
          st.markdown("\n".join([f"- {ligne.strip('+')}" if ligne.strip().startswith("+") else ligne for ligne in conseils]))
+    if resume_text:
+        st.markdown("### A prendre 🥤🍌\n")
+        for ligne in resume_text:
+            st.write(ligne)
+        
     if email:
           if plan:  # Vérification que le plan n'est pas vide
                #contenu_plan = [str(l) for l in plan if l]  # Nettoyer les valeurs nulles
-               envoyer_email(email, nom, distance, proposition, plan, conseils)
+               envoyer_email(email, nom, distance, proposition, plan, resume_text, conseils)
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
     else:
