@@ -688,7 +688,6 @@ if st.button("Envoyer mon Plan Nutritionnel"):
     enregistrer_utilisateur_google_sheet(nom, email, selection, cote, objectif)
     resume_text = []
     for nom, count in compteur_produits.items():
-        glucide_unitaire = glucides_par_nom.get(nom, 0)
         if unite == "sachet":
             total = round(count) if count % 1 == 0 else round(count, 1)
             resume_text.append(f"{total} sachets de {nom}")
