@@ -67,6 +67,7 @@ elif race == "CCC":
     tpsestime=-0.0000035772693135*(cote)*(cote)*(cote)+0.0094696502843*(cote)*(cote)-9.1536878738006*(cote)+3822.0987443797
     tpsinter=0.00110605836740463*(cote)*(cote)-2.15953926753332*(cote)+1371.82481156076
     tpsinterh=tpsinter/60
+    st.image("ProfilCCC.PNG")
     st.write('⌛ Temps de passage estimé à Champex Lac:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ta {race},")
     proposition.append(f"avec un temps de passage estimé à Champex Lac de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
@@ -75,12 +76,14 @@ elif race == "OCC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 58
     tpsestime=-0.0000018350782781*(cote)*(cote)*(cote)+0.0048352009471*(cote)*(cote)-4.6459913604367*(cote)+1925.1281152845
+    st.image("ProfilOCC.PNG")
 elif race == "TDS":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 152
     tpsestime=-0.0000072623741683*(cote)*(cote)*(cote)+0.0183752233114*(cote)*(cote)-17.0113930227568*(cote)+6818.75621299
     tpsinter=0.00257053620937511*(cote)*(cote)-4.72963365166168*(cote)+2849.97700254133
     tpsinterh=tpsinter/60
+    st.image("ProfilTDS.PNG")
     st.write('⌛ Temps de passage estimé à Beaufort:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ta {race},")
     proposition.append(f"avec un temps de passage estimé à Beaufort de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min")
@@ -89,10 +92,12 @@ elif race == "MCC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 38.5
     tpsestime=-0.0000019286314478*(cote)*(cote)*(cote)+0.0044463631803*(cote)*(cote)-3.7343821057262*(cote)+1351.6425925073
+    st.image("ProfilMCC.PNG")
 elif race == "ETC":
     cote = st.number_input("Ton index UTMB ou cote ITRA", min_value=1, value=500)
     distance = 15
     tpsestime=-0.0000010535438858*(cote)*(cote)*(cote)+0.0023650968191*(cote)*(cote)-1.8805758670806*(cote)+622.66999220336
+    st.image("ProfilETC.PNG")
 temp=st.checkbox("Cocher si plus de 20°C annoncés")
 if temp and (race != "Autre" or valid_index):
     tpsestime=tpsestime*1.03
