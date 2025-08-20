@@ -56,6 +56,7 @@ elif race == "UTMB":
     tpsestime=-0.00000688788001739*(cote)*(cote)*(cote)+0.0182221182514*(cote)*(cote)-17.596971526978*(cote)+7337.2207789047
     tpsinter=0.00170972442749155*(cote)*(cote)-3.31082485336002*(cote)+2134.76741108279
     tpsinterh=tpsinter/60
+    st.image("ProfilUTMB.PNG")
     st.write('⌛ Temps de passage estimé à Courmayeur:', int(tpsinterh), 'h', int((tpsinterh%1)*60), 'min' )
     proposition.append(f"Plan nutritionnel pour ton {race},")
     proposition.append(f"avec un temps de passage estimé à Courmayeur de {int(tpsinterh)}h{int((tpsinterh%1)*60)}min,")
