@@ -32,6 +32,7 @@ df = df[~((df["Ref"] == 'B') & (df["Caf"] != 0))]
 eau=500
 hnosodium=[]
 sodiumheureavant=0
+promobaouw=0
 proposition = []
 
 race = st.selectbox("Choisis ta course 👇", ("Autre", "UTMB", "TDS", "CCC", "OCC", "MCC", "ETC"))
@@ -334,7 +335,16 @@ if filtrer_produits:
         else:
             st.error("⚠️ Tu dois sélectionner au moins un produit de type Compote ou Barre et une Boisson")
             st.stop()  
-            
+
+
+if not filtrer_produits and not selection and not (filtrer_densite | filtrer_prix | filtrer_prix2 | filtrer_noix | filtrer_lactose | filtrer_gluten | filtrer_dop):
+    if filtrer_bio:
+        df = df[(df["Indice"] == 20)]
+    else:
+        df = df[(df["Indice"] == 10)]
+
+
+
 # Affichage des résultats
 st.write("### Produits sélectionnés :")
 st.dataframe(df[["Ref", "Marque", "Nom", "prix", "Glucide", "densite"]].rename(columns={
@@ -721,4 +731,4 @@ if st.button("Envoyer mon Plan Nutritionnel"):
           else:
                st.warning("❌ Aucun plan nutritionnel généré.")
     else:
-          st.warning("❌ Veuillez entrer une adresse email valide.")  
+          st.warning("❌ Entre une adresse email valide.")  
